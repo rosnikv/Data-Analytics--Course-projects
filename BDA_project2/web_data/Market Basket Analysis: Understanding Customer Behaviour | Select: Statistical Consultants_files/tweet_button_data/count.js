@@ -1,0 +1,1 @@
+/**/__twttr.receiveCount({"count":1,"url":"http:\/\/www.select-statistics.co.uk\/article\/blog-post\/market-basket-analysis-understanding-customer-behaviour\/"});

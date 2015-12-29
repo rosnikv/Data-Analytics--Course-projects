@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<meta charset="UTF-8">
+
+<!-- Mobile View -->
+<meta name="viewport" content="width=device-width">
+
+<title>  Market Basket Analysis with R : Salem Marafi</title>
+<link rel="Shortcut Icon" href="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/favicon.ico" type="image/x-icon">
+
+<link rel="stylesheet" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/style.css">
+<link rel="stylesheet" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/style-mobile.css">
+<link rel="stylesheet" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/style-icons.css">
+<style type="text/css" media="screen">
+
+body {
+-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}
+
+.btn:hover, .reply a:hover, #searchsubmit:hover, #prevLink a:hover, #nextLink a:hover, 
+#submit:hover, #comments #respond input#submit:hover, .flex-direction-nav .flex-prev:hover, #load-posts a:hover,
+.flex-direction-nav .flex-next:hover, .gallery img:hover, .container .gform_wrapper input.button:hover {
+background-color: #1e73be;border-color: #1e73be;}
+
+.container a, .container a:link, .container a:visited {
+color: #1e73be;}
+
+.sidebar ul.menu li a, .sidebar ul.menu li a:visited, .sidebar ul.menu li a:link {
+color: #1e73be !important;}
+
+.container a:hover, .container a:focus, .container a:active {
+color: #1e73be;}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover,
+.sidebar ul.menu li a:hover, .sidebar ul.menu li a:active, .sidebar ul.menu li a:focus,
+.sidebar ul.menu .current_page_item a, .sidebar ul.menu .current-menu-item a,
+.archive-result.format-link .headline a:hover {
+color: #1e73be !important;}
+</style>
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi Feed" href="http://www.salemmarafi.com/feed/">
+<link rel="pingback" href="http://www.salemmarafi.com/xmlrpc.php">
+
+
+<!-- KISSmetrics tracking snippet -->
+<div class="fit-vids-style">­<style>               .fluid-width-video-wrapper {                 width: 100%;                              position: relative;                       padding: 0;                            }                                                                                   .fluid-width-video-wrapper iframe,        .fluid-width-video-wrapper object,        .fluid-width-video-wrapper embed {           position: absolute;                       top: 0;                                   left: 0;                                  width: 100%;                              height: 100%;                          }                                       </style></div><div class="fit-vids-style">­<style>               .fluid-width-video-wrapper {                 width: 100%;                              position: relative;                       padding: 0;                            }                                                                                   .fluid-width-video-wrapper iframe,        .fluid-width-video-wrapper object,        .fluid-width-video-wrapper embed {           position: absolute;                       top: 0;                                   left: 0;                                  width: 100%;                              height: 100%;                          }                                       </style></div><script async="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/cbgapi.loaded_1"></script><script src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/all.js" id="facebook-jssdk"></script><script src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/pinit_main.js" async="" type="text/javascript"></script><script async="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/cbgapi.loaded_0"></script><script src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/analytics.js" async=""></script><script src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/40b144985fd7b78c948fca3c066dcbc0596bfa1e.js" async="" type="text/javascript"></script><script src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/i.js" async="" type="text/javascript"></script><script type="text/javascript">var _kmq = _kmq || [];
+var _kmk = _kmk || '40b144985fd7b78c948fca3c066dcbc0596bfa1e';
+function _kms(u){
+  setTimeout(function(){
+    var d = document, f = d.getElementsByTagName('script')[0],
+    s = d.createElement('script');
+    s.type = 'text/javascript'; s.async = true; s.src = u;
+    f.parentNode.insertBefore(s, f);
+  }, 1);
+}
+_kms('//i.kissmetrics.com/i.js');
+_kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+</script>
+
+
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi » Feed" href="http://www.salemmarafi.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi » Comments Feed" href="http://www.salemmarafi.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi » Market Basket Analysis with R Comments Feed" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/feed/">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"http:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/www.salemmarafi.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.2.5"}};
+			!function(a,b,c){function d(a){var c=b.createElement("canvas"),d=c.getContext&&c.getContext("2d");return d&&d.fillText?(d.textBaseline="top",d.font="600 32px Arial","flag"===a?(d.fillText(String.fromCharCode(55356,56812,55356,56807),0,0),c.toDataURL().length>3e3):(d.fillText(String.fromCharCode(55357,56835),0,0),0!==d.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/wp-emoji-release.js"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="dashicons-css" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/dashicons.css" type="text/css" media="all">
+<link rel="stylesheet" id="thickbox-css" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/thickbox.css" type="text/css" media="all">
+<link rel="stylesheet" id="ccslider_css-css" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/ccslider.css" type="text/css" media="all">
+<link rel="stylesheet" id="contact-form-7-css" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/styles.css" type="text/css" media="all">
+<link rel="stylesheet" id="wp-syntax-css-css" href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/wp-syntax.css" type="text/css" media="all">
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/jquery_004.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/retina.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/external-tracking.js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.salemmarafi.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.salemmarafi.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="The Cookie Thief by Valerie Cox" href="http://www.salemmarafi.com/personal/the-cookie-thief-by-valerie-cox/">
+<link rel="next" title="Kuwait Stock Exchange P/E with R" href="http://www.salemmarafi.com/code/kuwaitse-pe-ratio-r/">
+<meta name="generator" content="WordPress 4.2.5">
+<link rel="canonical" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/">
+<link rel="shortlink" href="http://www.salemmarafi.com/?p=6190">
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+<!-- Google Analytics Tracking by Google Analyticator 6.4.8: http://www.videousermanuals.com/google-analyticator/ -->
+<script type="text/javascript">
+    var analyticsFileTypes = ['jpg',' pdf',' mpg',' mp3',' mp4',' zip',' xls',' xlsx',' doc'];
+    var analyticsSnippet = 'disabled';
+    var analyticsEventTracking = 'enabled';
+</script>
+<script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-588895-2', 'auto');
+ 
+	ga('send', 'pageview');
+</script>
+
+<!-- Social -->
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/widgets.js"></script>
+<script gapi_processed="true" type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/plusone.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/pinit.js"></script>
+
+<!-- Google Fonts -->
+<link href="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/css.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"> 
+	var $j = jQuery.noConflict();
+	$j(document).ready(function() { 
+	    $j('.menu').superfish({
+	    	delay: 200,
+	    	animation: {opacity:'show'},
+	    	speed: 'fast',
+	    	autoArrows: true,
+	    	dropShadows: false
+	    }); 
+	}); 
+</script>
+
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+	$j(window).load(function() { 
+		// Call fitVid before FlexSlider initializes, so the proper initial height can be retrieved.
+		$j('.flexslider').fitVids().flexslider({
+			slideshowSpeed: 10000,
+			animationDuration	: 400,
+			animation: 'fade',
+			video: true,
+			useCSS: false,
+			animationLoop: true,
+			smoothHeight: true
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+	$j(document).ready(function($) {
+		$j(".scroll").click(function(event){		
+			event.preventDefault();
+			$j('html,body').animate({scrollTop:$(this.hash).offset().top}, 500);
+		});
+	});
+</script>
+
+<script>
+	var $j = jQuery.noConflict();
+	$j(document).ready(function(){
+	    $j(".feature-vid").fitVids();
+	});
+</script>
+
+<!-- Make Social Buttons Load in Ajax -->
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+	$j(document).ajaxComplete(function() {
+		gapi.plusone.go();
+		twttr.widgets.load();
+		try {
+			FB.XFBML.parse();
+		}catch(ex){}
+	});
+</script>
+
+<script src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/button.js" async="" charset="utf-8" type="text/javascript"></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow-x:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}.fb_link img{border:none}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_reset .fb_dialog_legacy{overflow:visible}.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.fb_dialog_content{background:#fff;color:#333}.fb_dialog_close_icon{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}.fb_dialog_close_icon:active{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}.fb_dialog_loader{background-color:#f6f7f8;border:1px solid #606060;font-size:24px;padding:20px}.fb_dialog_top_left,.fb_dialog_top_right,.fb_dialog_bottom_left,.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}.fb_dialog_top_left{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}.fb_dialog_top_right{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}.fb_dialog_bottom_left{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}.fb_dialog_bottom_right{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}.fb_dialog_vert_left,.fb_dialog_vert_right,.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}.fb_dialog_vert_left,.fb_dialog_vert_right{width:10px;height:100%}.fb_dialog_vert_left{margin-left:-10px}.fb_dialog_vert_right{right:0;margin-right:-10px}.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{width:100%;height:10px}.fb_dialog_horiz_top{margin-top:-10px}.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3a5795;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{width:auto;height:auto;min-height:initial;min-width:initial;background:none}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{color:#fff;display:block;padding-top:20px;clear:both;font-size:18px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6), color-stop(.5, #355492), to(#2A4887));border:1px solid #2f477a;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset, rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f6f7f8;border:1px solid #555;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/yD/r/t-wz8gw1xG1.png);background-repeat:no-repeat;background-position:50% 50%;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_hide_iframes iframe{position:relative;left:-10000px}.fb_iframe_widget_loader{position:relative;display:inline-block}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}.fb_iframe_widget_loader .FB_Loader{background:url(https://fbstatic-a.akamaihd.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}</style></head>
+
+<body class="single single-post postid-6190 single-format-standard">
+
+<div id="dic_bubble" class="selection_bubble fontSize13 noSelect" style="z-index:9999; border: 1px solid #4AAEDE;fetching=false"></div><script>
+//<![CDATA[
+(function(d, s, id) {
+    document.write('<div id="fb-root"></div>');
+    var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=246727095428680";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+//]]>
+</script><div class=" fb_reset" id="fb-root"><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/YKPvjVoWVGb.html" style="border: medium none;" tabindex="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_http" scrolling="no" allowfullscreen="true" allowtransparency="true" name="fb_xdm_frame_http" frameborder="0"></iframe><iframe src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/YKPvjVoWVGb_002.html" style="border: medium none;" tabindex="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_https" scrolling="no" allowfullscreen="true" allowtransparency="true" name="fb_xdm_frame_https" frameborder="0"></iframe></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/ping.html" style="display: none;" scrolling="no" allowfullscreen="true" allowtransparency="true" name="f2e792acd2c5bf4" frameborder="0"></iframe></div></div></div>
+
+<div id="navigation">
+	<div class="row">
+	
+    	<div class="menu sf-js-enabled"><ul id="menu-menu" class="menu sf-js-enabled"><li id="menu-item-236" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-236"><a href="http://www.salemmarafi.com/resume/">Resume</a></li>
+<li id="menu-item-237" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-237"><a href="http://www.salemmarafi.com/contact/">Contact</a></li>
+<li id="menu-item-6265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6265"><a href="http://www.r-bloggers.com/">R-Bloggers</a></li>
+</ul></div>    	
+    	    	<ul class="social-icons">
+    		    			<li><a href="http://www.salemmarafi.com/feed/" class="sm_32_icon sm_32_rss" target="_blank"><span></span></a></li>
+    		    		    		    		    			<li><a href="http://www.linkedin.com/profile/view?id=48287798" class="sm_32_icon sm_32_linkedin" target="_blank"><span></span></a></li>
+    		    		    		    		    			<li><a href="http://twitter.com/salemmarafi" class="sm_32_icon sm_32_twitter" target="_blank"><span></span></a></li>
+    		    		    			<li><a href="http://facebook.com/smarafi" class="sm_32_icon sm_32_facebook" target="_blank"><span></span></a></li>
+    		    	</ul>
+    	    	
+	</div>
+</div>
+    
+<div class="container">
+    
+    <div id="header">
+    	<div class="row">
+    		    			    				<div id="masthead">
+    					<h4 class="site-title"><span><a href="http://www.salemmarafi.com/" title="Salem Marafi" rel="home">Salem Marafi</a></span></h4>
+    					<h5 class="site-description"></h5>
+    				</div>
+    			    		    	</div>
+    </div>
+    
+<!-- BEGIN .row -->
+<div class="row">
+
+    <!-- BEGIN .eight columns -->
+    <div class="eight columns">	
+
+		<div class="content post-6190 post type-post status-publish format-standard hentry category-code tag-apriori tag-arules tag-arulesviz tag-association tag-data tag-data-mining tag-mining tag-r" id="page-6190">
+
+									
+						
+			
+			<div class="article">
+	
+				<h1 class="headline">Market Basket Analysis with R</h1>
+
+                <div class="postauthor">            
+                    <p class="left"><img class="icon" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/icon_author.png" title="Author" alt="Author"> Posted by <a href="http://www.salemmarafi.com/author/salem/" title="Posts by Salem" rel="author">Salem</a> on March 19, 2014</p>
+                    <p class="right"><img class="icon" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/icon_comment.png" title="Comments" alt="Comments"> <a class="scroll" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/#comments">60 Comments</a></p>
+                </div>
+                
+                	                	                    <div class="feature-img"></div>
+	                                	
+				<p><img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/Amazon_Funny-300x249.jpg" style="width: 250px;" alt="http://www.paulshealthblog.com/2012/05/customers-who-bought-this-item-also.html" class="alignright size-medium wp-image-6252">
+</p><div style="text-align: center; line-height: 20px;"><a href="http://www.paulshealthblog.com/2012/05/customers-who-bought-this-item-also.html" style="clear: both; float: right; width: 250px;">Source: Paul’s Health Blog</a></div>
+<h2><u>Association Rules</u></h2>
+<p>There are many ways to see the similarities between items. These are techniques that fall under the general umbrella of <strong>association</strong>. The outcome of this type of technique, in simple terms, is a set of rules that can be understood as <strong>“if this, then that”</strong>. </p>
+<h2><u>Applications</u></h2>
+<p>So what kind of items are we talking about?<br>
+There are many applications of association: </p>
+<ul>
+<li>Product recommendation – like Amazon’s “customers who bought that, also bought this”</li>
+<li>Music recommendations – like Last FM’s artist recommendations</li>
+<li>Medical diagnosis – like with diabetes <a href="http://static.ijcsce.org/wp-content/uploads/2013/12/IJCSCE110513.pdf">really cool stuff</a></li>
+<li>Content optimisation – like in magazine websites or blogs</li>
+</ul>
+<p>In this post we will focus on the retail application – it is simple, 
+intuitive, and the dataset comes packaged with R making it repeatable. </p>
+<h2><u>The Groceries Dataset</u></h2>
+<p>Imagine 10000 receipts sitting on your table. Each receipt represents
+ a transaction with items that were purchased. The receipt is a 
+representation of stuff that went into a customer’s basket – and 
+therefore ‘Market Basket Analysis’. </p>
+<p>That is exactly what the Groceries Data Set contains: a collection of
+ receipts with each line representing 1 receipt and the items purchased.
+ Each line is called a <strong><i>transaction</i></strong> and each column in a row represents an <strong><i>item</i></strong>. You can download the <a href="http://www.salemmarafi.com/wp-content/uploads/2014/03/groceries.csv">Groceries data set</a> to take a look at it, but this is not a necessary step. </p>
+<h2><u>A little bit of Math</u></h2>
+<p>We already discussed the concept of Items and Item Sets. </p>
+<p>We can represent our items as an item set as follows:</p>
+<div style="width: 100%; text-align: center; color: navy; font-family: system; font-size: 120%">I = <strong>{</strong> i<sub>1</sub>,i<sub>2</sub>,…,i<sub>n</sub> <strong>}</strong></div>
+<p>Therefore a transaction is represented as follows:</p>
+<div style="width: 100%; color: navy; text-align: center; font-family: system; font-size: 120%">t<sub>n</sub> = <strong>{</strong> i<sub>j</sub>,i<sub>k</sub>,…,i<sub>n</sub> <strong>}</strong></div>
+<p>This gives us our rules which are represented as follows:</p>
+<div style="width: 100%; color: navy; text-align: center; font-family: system; font-size: 120%"><strong>{</strong> i<sub>1</sub>,i<sub>2</sub><strong>}</strong> =&gt; <strong>{</strong> i<sub>k</sub><strong>}</strong></div>
+<p>Which can be read as “if a user buys an item in the item set on the 
+left hand side, then the user will likely buy the item on the right hand
+ side too”. A more human readable example is:</p>
+<div style="width: 100%; color: navy; text-align: center; font-family: system; font-size: 120%"><strong>{</strong>coffee,sugar<strong>}</strong> =&gt; <strong>{</strong>milk<strong>}</strong></div>
+<p>If a customer buys coffee and sugar, then they are also likely to buy milk. </p>
+<p>With this we can understand three important ratios; the support, 
+confidence and lift. We describe the significance of these in the 
+following bullet points, but if you are interested in a formal 
+mathematical definition you can find it on <a href="http://en.wikipedia.org/wiki/Lift_%28data_mining%29">wikipedia</a>.  </p>
+<ul>
+<li><strong>Support</strong>: The fraction of which our item set occurs in our dataset.</li>
+<li><strong>Confidence</strong>: probability that a rule is correct for a new transaction with items on the left.</li>
+<li><strong>Lift</strong>: The ratio by which by the confidence of a rule exceeds the expected confidence. <br>Note: if the lift is 1 it indicates that the items on the left and right are independent.</li>
+<h2><u>Apriori Recommendation with R</u></h2>
+<p>So lets get started by loading up our libraries and data set.</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Load the libraries</span>
+library<span style="color: #009900;">(</span>arules<span style="color: #009900;">)</span>
+library<span style="color: #009900;">(</span>arulesViz<span style="color: #009900;">)</span>
+library<span style="color: #009900;">(</span>datasets<span style="color: #009900;">)</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Load the data set</span>
+data<span style="color: #009900;">(</span>Groceries<span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>Lets explore the data before we make any rules:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Create an item frequency plot for the top 20 items</span>
+itemFrequencyPlot<span style="color: #009900;">(</span>Groceries<span style="color: #339933;">,</span>topN<span style="color: #339933;">=</span><span style="color: #cc66cc;">20</span><span style="color: #339933;">,</span>type<span style="color: #339933;">=</span><span style="color: #ff0000;">"absolute"</span><span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p><a href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/attachment/itemfrequency/" rel="attachment wp-att-6246"><img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/itemFrequency-270x300.png" alt="Apriori Item Frequency" class="aligncenter size-medium wp-image-6246"></a></p>
+<p>We are now ready to mine some rules!<br>
+You will always have to pass the minimum required <strong>support</strong> and <strong>confidence</strong>. </p>
+<ul>
+<li>We set the minimum support to 0.001 </li>
+<li>We set the minimum confidence of 0.8 </li>
+<li>We then show the top 5 rules </li>
+</ul>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Get the rules</span>
+rules <span style="color: #339933;">&lt;-</span> apriori<span style="color: #009900;">(</span>Groceries<span style="color: #339933;">,</span> parameter <span style="color: #339933;">=</span> list<span style="color: #009900;">(</span>supp <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0.001</span><span style="color: #339933;">,</span> conf <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0.8</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Show the top 5 rules, but only 2 digits</span>
+options<span style="color: #009900;">(</span>digits<span style="color: #339933;">=</span><span style="color: #cc66cc;">2</span><span style="color: #009900;">)</span>
+inspect<span style="color: #009900;">(</span>rules<span style="color: #009900;">[</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span><span style="color: #cc66cc;">5</span><span style="color: #009900;">]</span><span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>The output we see should look something like this</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">  lhs                        rhs             support      confidence  lift
+<span style="color: #cc66cc;">1</span> <span style="color: #009900;">{</span>liquor<span style="color: #339933;">,</span>red<span style="color: #339933;">/</span>blush wine<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>bottled beer<span style="color: #009900;">}</span>  <span style="color: #cc66cc;">0.0019</span>       <span style="color: #cc66cc;">0.90</span>        <span style="color: #cc66cc;">11.2</span>
+<span style="color: #cc66cc;">2</span> <span style="color: #009900;">{</span>curd<span style="color: #339933;">,</span>cereals<span style="color: #009900;">}</span>          <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>    <span style="color: #cc66cc;">0.0010</span>       <span style="color: #cc66cc;">0.91</span>        <span style="color: #cc66cc;">3.6</span>
+<span style="color: #cc66cc;">3</span> <span style="color: #009900;">{</span>yogurt<span style="color: #339933;">,</span>cereals<span style="color: #009900;">}</span>        <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>    <span style="color: #cc66cc;">0.0017</span>       <span style="color: #cc66cc;">0.81</span>        <span style="color: #cc66cc;">3.2</span>
+<span style="color: #cc66cc;">4</span> <span style="color: #009900;">{</span>butter<span style="color: #339933;">,</span>jam<span style="color: #009900;">}</span>            <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>    <span style="color: #cc66cc;">0.0010</span>       <span style="color: #cc66cc;">0.83</span>        <span style="color: #cc66cc;">3.3</span>
+<span style="color: #cc66cc;">5</span> <span style="color: #009900;">{</span>soups<span style="color: #339933;">,</span>bottled beer<span style="color: #009900;">}</span>    <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>    <span style="color: #cc66cc;">0.0011</span>       <span style="color: #cc66cc;">0.92</span>        <span style="color: #cc66cc;">3.6</span></pre></td></tr></tbody></table></div>
+
+<p>This reads easily, for example: if someone buys yogurt and cereals, they are 81% likely to buy whole milk too. </p>
+<p>We can get summary info. about the rules that give us some interesting information such as: </p>
+<ul>
+<li>The number of rules generated: 410</li>
+<li>The distribution of rules by length: Most rules are 4 items long</li>
+<li>The summary of quality measures: interesting to see ranges of support, lift, and confidence.  </li>
+<li>The information on the data mined: total data mined, and minimum parameters.
+</li></ul>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">set of <span style="color: #cc66cc;">410</span> rules
+&nbsp;
+rule <span style="color: #000066;">length</span> distribution <span style="color: #009900;">(</span>lhs <span style="color: #339933;">+</span> rhs<span style="color: #009900;">)</span><span style="color: #339933;">:</span> sizes
+  <span style="color: #cc66cc;">3</span>   <span style="color: #cc66cc;">4</span>   <span style="color: #cc66cc;">5</span>   <span style="color: #cc66cc;">6</span> 
+ <span style="color: #cc66cc;">29</span> <span style="color: #cc66cc;">229</span> <span style="color: #cc66cc;">140</span>  <span style="color: #cc66cc;">12</span> 
+&nbsp;
+summary of quality measures<span style="color: #339933;">:</span>
+         support     conf<span style="color: #339933;">.</span>           lift     
+ Min<span style="color: #339933;">.</span>   <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.00102</span>     Min<span style="color: #339933;">.</span>   <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.80</span>    Min<span style="color: #339933;">.</span>   <span style="color: #339933;">:</span> <span style="color: #cc66cc;">3.1</span>  
+ 1st Qu<span style="color: #339933;">.:</span><span style="color: #cc66cc;">0.00102</span>     1st Qu<span style="color: #339933;">.:</span><span style="color: #cc66cc;">0.83</span>    1st Qu<span style="color: #339933;">.:</span> <span style="color: #cc66cc;">3.3</span>  
+ Median <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.00122</span>     Median <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.85</span>    Median <span style="color: #339933;">:</span> <span style="color: #cc66cc;">3.6</span>  
+ Mean   <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.00125</span>     Mean   <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.87</span>    Mean   <span style="color: #339933;">:</span> <span style="color: #cc66cc;">4.0</span>  
+ 3rd Qu<span style="color: #339933;">.:</span><span style="color: #cc66cc;">0.00132</span>     3rd Qu<span style="color: #339933;">.:</span><span style="color: #cc66cc;">0.91</span>    3rd Qu<span style="color: #339933;">.:</span> <span style="color: #cc66cc;">4.3</span>  
+ Max<span style="color: #339933;">.</span>   <span style="color: #339933;">:</span><span style="color: #cc66cc;">0.00315</span>     Max<span style="color: #339933;">.</span>   <span style="color: #339933;">:</span><span style="color: #cc66cc;">1.00</span>    Max<span style="color: #339933;">.</span>   <span style="color: #339933;">:</span><span style="color: #cc66cc;">11.2</span>  
+&nbsp;
+mining info<span style="color: #339933;">:</span>
+      data      n      support   confidence
+ Groceries      <span style="color: #cc66cc;">9835</span>   <span style="color: #cc66cc;">0.001</span>     <span style="color: #cc66cc;">0.8</span></pre></td></tr></tbody></table></div>
+
+<h2><u>Sorting stuff out</u></h2>
+<p>The first issue we see here is that the rules are not sorted. Often 
+we will want the most relevant rules first. Lets say we wanted to have <strong>the most likely</strong> rules. We can easily sort by confidence by executing the following code.</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">rules<span style="color: #339933;">&lt;-</span><span style="color: #000066;">sort</span><span style="color: #009900;">(</span>rules<span style="color: #339933;">,</span> by<span style="color: #339933;">=</span><span style="color: #ff0000;">"confidence"</span><span style="color: #339933;">,</span> decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>Now our top 5 output will be sorted by confidence and therefore the most relevant rules appear.</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">  lhs                                            rhs            support  conf<span style="color: #339933;">.</span>  lift
+<span style="color: #cc66cc;">1</span> <span style="color: #009900;">{</span>rice<span style="color: #339933;">,</span>sugar<span style="color: #009900;">}</span>                                <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>   <span style="color: #cc66cc;">0.0012</span>   <span style="color: #cc66cc;">1</span>      <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">2</span> <span style="color: #009900;">{</span>canned fish<span style="color: #339933;">,</span>hygiene articles<span style="color: #009900;">}</span>              <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>   <span style="color: #cc66cc;">0.0011</span>   <span style="color: #cc66cc;">1</span>      <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">3</span> <span style="color: #009900;">{</span>root vegetables<span style="color: #339933;">,</span>butter<span style="color: #339933;">,</span>rice<span style="color: #009900;">}</span>               <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>   <span style="color: #cc66cc;">0.0010</span>   <span style="color: #cc66cc;">1</span>      <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">4</span> <span style="color: #009900;">{</span>root vegetables<span style="color: #339933;">,</span>whipped<span style="color: #339933;">/</span>sour cream<span style="color: #339933;">,</span>flour<span style="color: #009900;">}</span>  <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>   <span style="color: #cc66cc;">0.0017</span>   <span style="color: #cc66cc;">1</span>      <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">5</span> <span style="color: #009900;">{</span>butter<span style="color: #339933;">,</span>soft cheese<span style="color: #339933;">,</span>domestic eggs<span style="color: #009900;">}</span>          <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>   <span style="color: #cc66cc;">0.0010</span>   <span style="color: #cc66cc;">1</span>      <span style="color: #cc66cc;">3.9</span></pre></td></tr></tbody></table></div>
+
+<p>Rule 4 is perhaps excessively long. Lets say you wanted more concise 
+rules. That is also easy to do by adding a “maxlen” parameter to your 
+apriori function:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">rules <span style="color: #339933;">&lt;-</span> apriori<span style="color: #009900;">(</span>Groceries<span style="color: #339933;">,</span> parameter <span style="color: #339933;">=</span> list<span style="color: #009900;">(</span>supp <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0.001</span><span style="color: #339933;">,</span> conf <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0.8</span><span style="color: #339933;">,</span>maxlen<span style="color: #339933;">=</span><span style="color: #cc66cc;">3</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<h2><u>Redundancies</u></h2>
+<p>Sometimes, rules will repeat. Redundancy indicates that one item 
+might be a given. As an analyst you can elect to drop the item from the 
+dataset. Alternatively, you can remove redundant rules generated. </p>
+<p>We can eliminate these repeated rules using the follow snippet of code:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">subset<span style="color: #339933;">.</span>matrix <span style="color: #339933;">&lt;-</span> is<span style="color: #339933;">.</span>subset<span style="color: #009900;">(</span>rules<span style="color: #339933;">,</span> rules<span style="color: #009900;">)</span>
+subset<span style="color: #339933;">.</span>matrix<span style="color: #009900;">[</span>lower<span style="color: #339933;">.</span>tri<span style="color: #009900;">(</span>subset<span style="color: #339933;">.</span>matrix<span style="color: #339933;">,</span> diag<span style="color: #339933;">=</span>T<span style="color: #009900;">)</span><span style="color: #009900;">]</span> <span style="color: #339933;">&lt;-</span> NA
+redundant <span style="color: #339933;">&lt;-</span> colSums<span style="color: #009900;">(</span>subset<span style="color: #339933;">.</span>matrix<span style="color: #339933;">,</span> na<span style="color: #339933;">.</span>rm<span style="color: #339933;">=</span>T<span style="color: #009900;">)</span> <span style="color: #339933;">&gt;=</span> <span style="color: #cc66cc;">1</span>
+rules<span style="color: #339933;">.</span>pruned <span style="color: #339933;">&lt;-</span> rules<span style="color: #009900;">[</span><span style="color: #339933;">!</span>redundant<span style="color: #009900;">]</span>
+rules<span style="color: #339933;">&lt;-</span>rules<span style="color: #339933;">.</span>pruned</pre></td></tr></tbody></table></div>
+
+<h2><u>Targeting Items</u></h2>
+<p>Now that we know how to generate rules, limit the output, lets say we
+ wanted to target items to generate rules. There are two types of 
+targets we might be interested in that are illustrated with an example 
+of “whole milk”:</p>
+<ol>
+<li>What are customers likely to buy before buying whole milk</li>
+<li>What are customers likely to buy if they purchase whole milk?</li>
+</ol>
+<p>This essentially means we want to set either the Left Hand Side and Right Hand Side. This is not difficult to do with R!</p>
+<p>Answering the first question we adjust our <strong>apriori()</strong> function as follows:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">rules<span style="color: #339933;">&lt;-</span>apriori<span style="color: #009900;">(</span>data<span style="color: #339933;">=</span>Groceries<span style="color: #339933;">,</span> parameter<span style="color: #339933;">=</span>list<span style="color: #009900;">(</span>supp<span style="color: #339933;">=</span><span style="color: #cc66cc;">0.001</span><span style="color: #339933;">,</span>conf <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0.08</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> 
+               appearance <span style="color: #339933;">=</span> list<span style="color: #009900;">(</span>default<span style="color: #339933;">=</span><span style="color: #ff0000;">"lhs"</span><span style="color: #339933;">,</span>rhs<span style="color: #339933;">=</span><span style="color: #ff0000;">"whole milk"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+               control <span style="color: #339933;">=</span> list<span style="color: #009900;">(</span>verbose<span style="color: #339933;">=</span>F<span style="color: #009900;">)</span><span style="color: #009900;">)</span>
+rules<span style="color: #339933;">&lt;-</span><span style="color: #000066;">sort</span><span style="color: #009900;">(</span>rules<span style="color: #339933;">,</span> decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #339933;">,</span>by<span style="color: #339933;">=</span><span style="color: #ff0000;">"confidence"</span><span style="color: #009900;">)</span>
+inspect<span style="color: #009900;">(</span>rules<span style="color: #009900;">[</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span><span style="color: #cc66cc;">5</span><span style="color: #009900;">]</span><span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>The output will look like this:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">  lhs                                              rhs          supp<span style="color: #339933;">.</span>   conf<span style="color: #339933;">.</span>  lift
+<span style="color: #cc66cc;">1</span> <span style="color: #009900;">{</span>rice<span style="color: #339933;">,</span>sugar<span style="color: #009900;">}</span>                                 <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>  <span style="color: #cc66cc;">0.0012</span>   <span style="color: #cc66cc;">1</span>     <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">2</span> <span style="color: #009900;">{</span>canned fish<span style="color: #339933;">,</span>hygiene articles<span style="color: #009900;">}</span>               <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>  <span style="color: #cc66cc;">0.0011</span>   <span style="color: #cc66cc;">1</span>     <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">3</span> <span style="color: #009900;">{</span>root vegetables<span style="color: #339933;">,</span>butter<span style="color: #339933;">,</span>rice<span style="color: #009900;">}</span>                <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>  <span style="color: #cc66cc;">0.0010</span>   <span style="color: #cc66cc;">1</span>     <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">4</span> <span style="color: #009900;">{</span>root vegetables<span style="color: #339933;">,</span>whipped<span style="color: #339933;">/</span>sour cream<span style="color: #339933;">,</span>flour<span style="color: #009900;">}</span>   <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>  <span style="color: #cc66cc;">0.0017</span>   <span style="color: #cc66cc;">1</span>     <span style="color: #cc66cc;">3.9</span>
+<span style="color: #cc66cc;">5</span> <span style="color: #009900;">{</span>butter<span style="color: #339933;">,</span>soft cheese<span style="color: #339933;">,</span> domestic eggs<span style="color: #009900;">}</span>          <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span>  <span style="color: #cc66cc;">0.0010</span>   <span style="color: #cc66cc;">1</span>     <span style="color: #cc66cc;">3.9</span></pre></td></tr></tbody></table></div>
+
+<p>Likewise, we can set the left hand side to be “whole milk” and find its antecedents.<br>
+Note the following:</p>
+<ul>
+<li>We set the confidence to 0.15 since we get no rules with 0.8</li>
+<li>We set a minimum length of 2 to avoid empty left hand side items</li>
+</ul>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">rules<span style="color: #339933;">&lt;-</span>apriori<span style="color: #009900;">(</span>data<span style="color: #339933;">=</span>Groceries<span style="color: #339933;">,</span> parameter<span style="color: #339933;">=</span>list<span style="color: #009900;">(</span>supp<span style="color: #339933;">=</span><span style="color: #cc66cc;">0.001</span><span style="color: #339933;">,</span>conf <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0.15</span><span style="color: #339933;">,</span>minlen<span style="color: #339933;">=</span><span style="color: #cc66cc;">2</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> 
+               appearance <span style="color: #339933;">=</span> list<span style="color: #009900;">(</span>default<span style="color: #339933;">=</span><span style="color: #ff0000;">"rhs"</span><span style="color: #339933;">,</span>lhs<span style="color: #339933;">=</span><span style="color: #ff0000;">"whole milk"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+               control <span style="color: #339933;">=</span> list<span style="color: #009900;">(</span>verbose<span style="color: #339933;">=</span>F<span style="color: #009900;">)</span><span style="color: #009900;">)</span>
+rules<span style="color: #339933;">&lt;-</span><span style="color: #000066;">sort</span><span style="color: #009900;">(</span>rules<span style="color: #339933;">,</span> decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #339933;">,</span>by<span style="color: #339933;">=</span><span style="color: #ff0000;">"confidence"</span><span style="color: #009900;">)</span>
+inspect<span style="color: #009900;">(</span>rules<span style="color: #009900;">[</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span><span style="color: #cc66cc;">5</span><span style="color: #009900;">]</span><span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>Now our output looks like this:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">  lhs             rhs                support confidence lift
+<span style="color: #cc66cc;">1</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>other vegetables<span style="color: #009900;">}</span>   <span style="color: #cc66cc;">0.075</span>       <span style="color: #cc66cc;">0.29</span>  <span style="color: #cc66cc;">1.5</span>
+<span style="color: #cc66cc;">2</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>rolls<span style="color: #339933;">/</span>buns<span style="color: #009900;">}</span>         <span style="color: #cc66cc;">0.057</span>       <span style="color: #cc66cc;">0.22</span>  <span style="color: #cc66cc;">1.2</span>
+<span style="color: #cc66cc;">3</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>yogurt<span style="color: #009900;">}</span>             <span style="color: #cc66cc;">0.056</span>       <span style="color: #cc66cc;">0.22</span>  <span style="color: #cc66cc;">1.6</span>
+<span style="color: #cc66cc;">4</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>root vegetables<span style="color: #009900;">}</span>    <span style="color: #cc66cc;">0.049</span>       <span style="color: #cc66cc;">0.19</span>  <span style="color: #cc66cc;">1.8</span>
+<span style="color: #cc66cc;">5</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>tropical fruit<span style="color: #009900;">}</span>     <span style="color: #cc66cc;">0.042</span>       <span style="color: #cc66cc;">0.17</span>  <span style="color: #cc66cc;">1.6</span>
+<span style="color: #cc66cc;">6</span> <span style="color: #009900;">{</span>whole milk<span style="color: #009900;">}</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">{</span>soda<span style="color: #009900;">}</span>               <span style="color: #cc66cc;">0.040</span>       <span style="color: #cc66cc;">0.16</span>  <span style="color: #cc66cc;">0.9</span></pre></td></tr></tbody></table></div>
+
+<h2><u>Visualization</u></h2>
+<p>The last step is visualization. Lets say you wanted to map out the 
+rules in a graph. We can do that with another library called 
+“arulesViz”.</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;">library<span style="color: #009900;">(</span>arulesViz<span style="color: #009900;">)</span>
+plot<span style="color: #009900;">(</span>rules<span style="color: #339933;">,</span>method<span style="color: #339933;">=</span><span style="color: #ff0000;">"graph"</span><span style="color: #339933;">,</span>interactive<span style="color: #339933;">=</span>TRUE<span style="color: #339933;">,</span>shading<span style="color: #339933;">=</span>NA<span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>You will get a nice graph that you can move around to look like this:</p>
+<p><a href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/attachment/rulegraph/" rel="attachment wp-att-6250"><img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/ruleGraph-300x275.png" alt="Rules Graph" class="aligncenter size-medium wp-image-6250"></a></p>
+<h2><u>References</u></h2>
+<ul>
+<li><a href="http://snowplowanalytics.com/analytics/catalog-analytics/market-basket-analysis-identifying-products-that-sell-well-together.html">Snowplow Market Basket Analysis</a></li>
+<li><a href="http://www.amazon.com/gp/product/0471666572/ref=as_li_ss_tl?ie=UTF8&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0471666572&amp;linkCode=as2&amp;tag=salemara-20">Discovering Knowledge in Data: An Introduction to Data Mining</a><img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/ir.gif" alt="" style="border:none !important; margin:0px !important;" height="1" width="1" border="0">
+</li>
+<li><a href="http://www.rdatamining.com/examples/association-rules">RDatamining.com</a></li>
+</ul>
+				
+								<div class="social">
+					<div class="like-btn">
+					  	<div fb-iframe-plugin-query="app_id=246727095428680&amp;container_width=0&amp;href=http%3A%2F%2Fwww.salemmarafi.com%2Fcode%2Fmarket-basket-analysis-with-r%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;send=false&amp;show_faces=false&amp;width=100" fb-xfbml-state="rendered" class="fb-like fb_iframe_widget" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"><span style="vertical-align: bottom; width: 76px; height: 20px;"><iframe class="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/like.html" style="border: medium none; visibility: visible; width: 76px; height: 20px;" title="fb:like Facebook Social Plugin" scrolling="no" allowfullscreen="true" allowtransparency="true" name="f2ca74f0859c68e" frameborder="0" height="1000px" width="100px"></iframe></span></div>
+					</div>
+					<div class="pin-btn">
+						<a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.salemmarafi.com%2Fcode%2Fmarket-basket-analysis-with-r%2F&amp;media=&amp;description=Market%20Basket%20Analysis%20with%20R" class="pin-it-button" count-layout="horizontal"><img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/PinExt.png" title="Pin It" border="0"></a>
+					</div>
+					<div class="tweet-btn">
+						<iframe data-url="http://www.salemmarafi.com/code/market-basket-analysis-with-r/" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/tweet_button.html" title="Twitter Tweet Button" style="position: static; visibility: visible; width: 87px; height: 20px;" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" allowtransparency="true" scrolling="no" id="twitter-widget-0" frameborder="0"></iframe>
+					</div>
+					<div class="plus-btn">
+						<div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 90px; height: 20px;"><iframe title="+1" data-gapiattached="true" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/fastbutton.html" name="I0_1444671287994" id="I0_1444671287994" vspace="0" tabindex="0" style="position: static; top: 0px; width: 90px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div>
+					</div>
+				</div>
+								
+								<div class="clear"></div>
+				<rdf:rdf xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+		<rdf:description rdf:about="http://www.salemmarafi.com/code/market-basket-analysis-with-r/" dc:identifier="http://www.salemmarafi.com/code/market-basket-analysis-with-r/" dc:title="Market Basket Analysis with R" trackback:ping="http://www.salemmarafi.com/code/market-basket-analysis-with-r/trackback/">
+</rdf:description></rdf:rdf>			
+			<!-- END .article columns -->
+			</ul></div>
+			
+			<div class="postmeta">
+				<p class="left"><img class="icon" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/icon_category.png" title="Category" alt="Category"> Category: <a href="http://www.salemmarafi.com/category/code/" rel="category tag">Code</a></p> 
+				<p class="right"><img class="icon" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/icon_tag.png" title="Tag" alt="Tag"> Tags: <a href="http://www.salemmarafi.com/tag/apriori/" rel="tag">apriori</a>, <a href="http://www.salemmarafi.com/tag/arules/" rel="tag">arules</a>, <a href="http://www.salemmarafi.com/tag/arulesviz/" rel="tag">arulesViz</a>, <a href="http://www.salemmarafi.com/tag/association/" rel="tag">association</a>, <a href="http://www.salemmarafi.com/tag/data/" rel="tag">data</a>, <a href="http://www.salemmarafi.com/tag/data-mining/" rel="tag">data mining</a>, <a href="http://www.salemmarafi.com/tag/mining/" rel="tag">mining</a>, <a href="http://www.salemmarafi.com/tag/r/" rel="tag">R</a></p>
+			</div>
+		
+		<!-- END .post columns -->
+		</div>
+
+        <div class="postcomments">
+        	<div class="article">
+        			<div id="comments">
+	
+	
+			<h3 id="comments-title">
+			60 Comments on “<span>Market Basket Analysis with R</span>”		</h3>
+
+		
+		<ol class="commentlist">
+				<li class="post pingback">
+		<p>Pingback: <a href="http://www.salemmarafi.com/code/collaborative-filtering-r/" rel="external nofollow" class="url">Collaborative Filtering with R : Salem Marafi</a></p>
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="http://www.salemmarafi.com/uncategorized/customer-segmentation-excel-and-r/" rel="external nofollow" class="url">Customer Segmentation: Excel and R : Salem Marafi</a></p>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-30373">
+		<article id="comment-30373" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/6f96e338a592301e3329923e7b5afedc.jpeg" srcset="http://0.gravatar.com/avatar/6f96e338a592301e3329923e7b5afedc?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-30373"><time pubdate="" datetime="2014-05-24T07:09:51+00:00">May 24, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Karthikeyan P</span> </span>				<p>A Very good article on MBA. Thank you for posting.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=30373#respond" onclick='return addComment.moveForm( "comment-30373", "30373", "respond", "6190" )' aria-label="Reply to Karthikeyan P">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-33454">
+		<article id="comment-33454" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/cafc0a1ff5a32042d07882e6e358872f.jpeg" srcset="http://0.gravatar.com/avatar/cafc0a1ff5a32042d07882e6e358872f?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-33454"><time pubdate="" datetime="2014-08-03T21:03:16+00:00">August 3, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Ashok Menon</span> </span>				<p>Enjoyed the piece..your code worked to perfection…was attempting to get a grip on MBA the R route…Many Thanks</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=33454#respond" onclick='return addComment.moveForm( "comment-33454", "33454", "respond", "6190" )' aria-label="Reply to Ashok Menon">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-33470">
+		<article id="comment-33470" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-33470"><time pubdate="" datetime="2014-08-03T23:36:17+00:00">August 3, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Ashok! </p>
+<p>Glad it worked! Let me know if I can help any more ^_^ </p>
+<p>Cheers for stopping to read the post!</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=33470#respond" onclick='return addComment.moveForm( "comment-33470", "33470", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-33727">
+		<article id="comment-33727" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/cafc0a1ff5a32042d07882e6e358872f.jpeg" srcset="http://0.gravatar.com/avatar/cafc0a1ff5a32042d07882e6e358872f?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-33727"><time pubdate="" datetime="2014-08-04T21:53:08+00:00">August 4, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Ashok Menon</span> </span>				<p>Hi Salem,</p>
+<p>Just in case you can increase the complexity tier of the dataset – 
+say introduce a CustomerID and say Date of Purchase to begin 
+with…something akin to raw data that we normally get…I am not sure if it
+ would be worth your while…all the same… also it may not be a bad idea I
+ feel to add some literature to your visualisation piece…as a final 
+thought if your visualisation could resemble  a la SPSS/equivalent – 
+with some dashboards thrown in – the impact would be substantial. </p>
+<p>Cheers!!</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=33727#respond" onclick='return addComment.moveForm( "comment-33727", "33727", "respond", "6190" )' aria-label="Reply to Ashok Menon">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="http://www.analyticsvidhya.com/blog/2014/08/effective-cross-selling-market-basket-analysis/" rel="external nofollow" class="url">Effective Cross Selling using Market Basket Analysis</a></p>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-37126">
+		<article id="comment-37126" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/aed3b8a787b61f6b4893abfa8570f205.jpeg" srcset="http://1.gravatar.com/avatar/aed3b8a787b61f6b4893abfa8570f205?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-37126"><time pubdate="" datetime="2014-08-22T10:27:18+00:00">August 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Prashant</span> </span>				<p>Hi Saleem,</p>
+<p>It was really nice explination about MBA using apriori algorithm.</p>
+<p>I am trying build algorithm using different category(i.e sports).</p>
+<p>Can you please help me to showcase my data as package, similar to your groceries data.</p>
+<p>Thanks in advance.</p>
+<p>Prashant</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=37126#respond" onclick='return addComment.moveForm( "comment-37126", "37126", "respond", "6190" )' aria-label="Reply to Prashant">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-37129">
+		<article id="comment-37129" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-37129"><time pubdate="" datetime="2014-08-22T10:41:21+00:00">August 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Prashant,</p>
+<p>Sure, the groceries dataset comes packaged with R. </p>
+<p>If you want to make your data available to others you might want to 
+look into saving your workspace with save() or saving your data set with
+ save.image(). </p>
+<p>I am not sure if I answered the question you were after – let me know if I haven’t <img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/simple-smile.png" alt=":)" class="wp-smiley" style="height: 1em; max-height: 1em;"></p>
+<p>Cheers,<br>
+Salem</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=37129#respond" onclick='return addComment.moveForm( "comment-37129", "37129", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-37711">
+		<article id="comment-37711" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/aed3b8a787b61f6b4893abfa8570f205.jpeg" srcset="http://1.gravatar.com/avatar/aed3b8a787b61f6b4893abfa8570f205?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-37711"><time pubdate="" datetime="2014-08-27T07:54:25+00:00">August 27, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Prashant</span> </span>				<p>Hi Saleem,</p>
+<p>Thanks for your promt reply. Actualy my question was little 
+different, am trying to create market basket analysis for sports 
+category similar to your grocery category, since i have ctreated dummy 
+transactional data for sports items, and using it as csv file but 
+unfortunately am unable to get very neat out like your, hence i just 
+wondering whether my data set creation have any problem.</p>
+<p>If you want i can share my sample data with you. I will more than happy to talk to you over phone also.</p>
+<p>Your help is greatly appreciated.</p>
+<p>Thanks,<br>
+Prashant</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=37711#respond" onclick='return addComment.moveForm( "comment-37711", "37711", "respond", "6190" )' aria-label="Reply to Prashant">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-37714">
+		<article id="comment-37714" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-37714"><time pubdate="" datetime="2014-08-27T10:07:54+00:00">August 27, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Sure! I’ll send you an email now, please send across a sample data set.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=37714#respond" onclick='return addComment.moveForm( "comment-37714", "37714", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment even depth-3" id="li-comment-73221">
+		<article id="comment-73221" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/3f50f4fe0b5a9c6a63f915e5c55f562a.jpeg" srcset="http://0.gravatar.com/avatar/3f50f4fe0b5a9c6a63f915e5c55f562a?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-73221"><time pubdate="" datetime="2015-01-11T19:16:26+00:00">January 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Ammar</span> </span>				<p>Plz send me the Sports data, I want it for my semester project</p>
+<p><a href="mailto:k112191@nu.edu.pk">k112191@nu.edu.pk</a></p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=73221#respond" onclick='return addComment.moveForm( "comment-73221", "73221", "respond", "6190" )' aria-label="Reply to Ammar">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-37825">
+		<article id="comment-37825" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/d0aad891585e95d86a9071ac8f22b3dd.jpeg" srcset="http://1.gravatar.com/avatar/d0aad891585e95d86a9071ac8f22b3dd?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-37825"><time pubdate="" datetime="2014-08-29T00:31:28+00:00">August 29, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Omid</span> </span>				<p>Hi Salem,</p>
+<p>I am trying to read in my own data, but unfortunetly I get an error: </p>
+<p>Error in (function (classes, fdef, mtable)  :<br>
+  unable to find an inherited method for function ‘itemFrequencyPlot’ for signature ‘”data.frame”’</p>
+<p>Do you perhaps know why? Have I read in the data wrong?</p>
+<p>Appreciate the effort.</p>
+<p>Regards,<br>
+Omid</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=37825#respond" onclick='return addComment.moveForm( "comment-37825", "37825", "respond", "6190" )' aria-label="Reply to Omid">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-37865">
+		<article id="comment-37865" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-37865"><time pubdate="" datetime="2014-08-29T13:48:21+00:00">August 29, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Omid! </p>
+<p>Did you try using read.transactions() to read in the data?</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=37865#respond" onclick='return addComment.moveForm( "comment-37865", "37865", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-38476">
+		<article id="comment-38476" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/aed3b8a787b61f6b4893abfa8570f205.jpeg" srcset="http://1.gravatar.com/avatar/aed3b8a787b61f6b4893abfa8570f205?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-38476"><time pubdate="" datetime="2014-09-03T15:30:16+00:00">September 3, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Prashant</span> </span>				<p>Hi Salem Again,</p>
+<p>Like i mentioned earlier, i am working on sports category data for 
+MBA, for my lhs product (i.e. input product) am geting missings({ }) as 
+rhs. am using “read.transactions” to read data where it ask for 
+“rm.duplicate=T”. I expect due to removing duplicate data i might be 
+facing this issue.</p>
+<p>Do you know any other options read data where i done need to lose any data &amp; get my product details in rhs?</p>
+<p>Thanks Again,<br>
+Prashant</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=38476#respond" onclick='return addComment.moveForm( "comment-38476", "38476", "respond", "6190" )' aria-label="Reply to Prashant">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-38829">
+		<article id="comment-38829" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-38829"><time pubdate="" datetime="2014-09-05T19:57:41+00:00">September 5, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Prashant!</p>
+<p>Actually that is normal behaviour if you do not set the minimum number of required rules. </p>
+<p>If you read the help file on the apriori library it is mentioned there. </p>
+<p>If you get an empty LHS with an item on the RHS {}=&gt;{Cookies} it 
+means that no matter what item you choose, you will always get cookies. </p>
+<p>Likewise if you get an empty RHS with an item on the LHS it means 
+that if you select the item on the LHS it will be the only item in the 
+basket. </p>
+<p>If you are getting a lot of these empty brackets you have different options:<br>
+– Increase your data set it might be too sparse<br>
+– Change the confidence intervals (lift, support, confidence)</p>
+<p>I hope this helps.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=38829#respond" onclick='return addComment.moveForm( "comment-38829", "38829", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt depth-2" id="li-comment-73219">
+		<article id="comment-73219" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/3f50f4fe0b5a9c6a63f915e5c55f562a.jpeg" srcset="http://0.gravatar.com/avatar/3f50f4fe0b5a9c6a63f915e5c55f562a?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-73219"><time pubdate="" datetime="2015-01-11T19:14:40+00:00">January 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Ammar</span> </span>				<p>Can u please share your sports data with me…..I want it for my semester project</p>
+<p>ID: <a href="mailto:k112191@nu.edu.pk">k112191@nu.edu.pk</a></p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=73219#respond" onclick='return addComment.moveForm( "comment-73219", "73219", "respond", "6190" )' aria-label="Reply to Ammar">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-47346">
+		<article id="comment-47346" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/36e0cff6ff1cb6f136df13d7d378fad6.jpeg" srcset="http://0.gravatar.com/avatar/36e0cff6ff1cb6f136df13d7d378fad6?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47346"><time pubdate="" datetime="2014-10-21T17:17:16+00:00">October 21, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">angela</span> </span>				<p>hi Salem<br>
+great article , my thesis is on market basket analysis , and what u 
+wrote is perfect , but incase u have any data on any retail shop which 
+implemented this with their numbers that would be just great. it could 
+help me a lot and saves my time i should defend my thesis in two months 
+and yet havent found a single data on any other shop apart ours:(<br>
+regards<br>
+F</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47346#respond" onclick='return addComment.moveForm( "comment-47346", "47346", "respond", "6190" )' aria-label="Reply to angela">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-47546">
+		<article id="comment-47546" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47546"><time pubdate="" datetime="2014-10-22T17:20:26+00:00">October 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Angela,</p>
+<p>A lot of retailers have this implemented. In the UK Tesco’s loyalty 
+system started based on this algorithm. If you have 2 months I think to 
+defend your thesis it would be even better if you partnered with a local
+ retailer and ran a pilot. Thoughts?</p>
+<p>Salem</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47546#respond" onclick='return addComment.moveForm( "comment-47546", "47546", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even depth-2" id="li-comment-63970">
+		<article id="comment-63970" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/1cac4d654feabae55357948fe4471f24.jpeg" srcset="http://1.gravatar.com/avatar/1cac4d654feabae55357948fe4471f24?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-63970"><time pubdate="" datetime="2014-12-11T14:40:46+00:00">December 11, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">eric</span> </span>				<p>hi angel<br>
+i have some real time basket data i could send you<br>
+contact me</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=63970#respond" onclick='return addComment.moveForm( "comment-63970", "63970", "respond", "6190" )' aria-label="Reply to eric">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment odd alt depth-3" id="li-comment-73217">
+		<article id="comment-73217" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/3f50f4fe0b5a9c6a63f915e5c55f562a.jpeg" srcset="http://0.gravatar.com/avatar/3f50f4fe0b5a9c6a63f915e5c55f562a?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-73217"><time pubdate="" datetime="2015-01-11T19:11:51+00:00">January 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Ammar</span> </span>				<p>Plz send me the data asap i want it for my semester project</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=73217#respond" onclick='return addComment.moveForm( "comment-73217", "73217", "respond", "6190" )' aria-label="Reply to Ammar">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment even depth-4" id="li-comment-73218">
+		<article id="comment-73218" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/3f50f4fe0b5a9c6a63f915e5c55f562a.jpeg" srcset="http://0.gravatar.com/avatar/3f50f4fe0b5a9c6a63f915e5c55f562a?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-73218"><time pubdate="" datetime="2015-01-11T19:12:36+00:00">January 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Ammar</span> </span>				<p><a href="mailto:k112191@mu.edu.pk">k112191@mu.edu.pk</a></p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=73218#respond" onclick='return addComment.moveForm( "comment-73218", "73218", "respond", "6190" )' aria-label="Reply to Ammar">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt depth-3" id="li-comment-80221">
+		<article id="comment-80221" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/3a1dded80790b2a634ef349f3ed6f538.jpeg" srcset="http://0.gravatar.com/avatar/3a1dded80790b2a634ef349f3ed6f538?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-80221"><time pubdate="" datetime="2015-02-23T16:02:59+00:00">February 23, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Migle</span> </span>				<p>Hi Eric,</p>
+<p>I’m writing my Bachelor thesis about Market Basket Analysis and 
+looking everywhere for some data, I didn’t find anything so far, maybe 
+you could send me yours, it would be really great!</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=80221#respond" onclick='return addComment.moveForm( "comment-80221", "80221", "respond", "6190" )' aria-label="Reply to Migle">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-47545">
+		<article id="comment-47545" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/00d3c68bd5566644e54378df733290ab.jpeg" srcset="http://0.gravatar.com/avatar/00d3c68bd5566644e54378df733290ab?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47545"><time pubdate="" datetime="2014-10-22T17:14:39+00:00">October 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Manu</span> </span>				<p>Hi Saleem,<br>
+Really helpful article.</p>
+<p>I am having trouble converting csv to transaction data.<br>
+The original groceries dataset has 9835 rows and 169 columns. But when I
+ try to convert the groceries.csv to transaction using the 
+read(df,”transactions”) it results into a transaction data with 9835 
+rows but 7011 columns.</p>
+<p>Any help in this regard will be appreciated.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47545#respond" onclick='return addComment.moveForm( "comment-47545", "47545", "respond", "6190" )' aria-label="Reply to Manu">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-47547">
+		<article id="comment-47547" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47547"><time pubdate="" datetime="2014-10-22T17:21:37+00:00">October 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Manu,</p>
+<p>Try <a href="http://www.inside-r.org/packages/cran/arules/docs/read.transactions" rel="nofollow">read.transactions</a> instead of just read. It should work fine. </p>
+<p>Cheers,<br>
+Salem</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47547#respond" onclick='return addComment.moveForm( "comment-47547", "47547", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment even depth-3" id="li-comment-47590">
+		<article id="comment-47590" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/00d3c68bd5566644e54378df733290ab.jpeg" srcset="http://0.gravatar.com/avatar/00d3c68bd5566644e54378df733290ab?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47590"><time pubdate="" datetime="2014-10-22T23:10:34+00:00">October 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Manu</span> </span>				<p>Thanks Saleem.<br>
+read.transactions worked for me.<br>
+I did use it before but did not set the format then.<br>
+Setting the format to basket did the trick.</p>
+<p>Thanks once again</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47590#respond" onclick='return addComment.moveForm( "comment-47590", "47590", "respond", "6190" )' aria-label="Reply to Manu">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt depth-3" id="li-comment-47592">
+		<article id="comment-47592" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/00d3c68bd5566644e54378df733290ab.jpeg" srcset="http://0.gravatar.com/avatar/00d3c68bd5566644e54378df733290ab?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47592"><time pubdate="" datetime="2014-10-22T23:34:55+00:00">October 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Manu</span> </span>				<p>Do you have any idea of an R package which uses the fp-growth for association rule mining.</p>
+<p>Thanks<br>
+manu</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47592#respond" onclick='return addComment.moveForm( "comment-47592", "47592", "respond", "6190" )' aria-label="Reply to Manu">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-4" id="li-comment-47666">
+		<article id="comment-47666" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-47666"><time pubdate="" datetime="2014-10-23T12:29:48+00:00">October 23, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Manu,</p>
+<p>Great question. An implementation is available here: <a href="http://en.wikibooks.org/wiki/Data_Mining_Algorithms_In_R/Frequent_Pattern_Mining/The_FP-Growth_Algorithm" rel="nofollow">http://en.wikibooks.org/wiki/Data_Mining_Algorithms_In_R/Frequent_Pattern_Mining/The_FP-Growth_Algorithm</a> if you end up using this please share I would be interested to seeing differences. </p>
+<p>Cheers,<br>
+Salem</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=47666#respond" onclick='return addComment.moveForm( "comment-47666", "47666", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt depth-3" id="li-comment-92241">
+		<article id="comment-92241" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/c789f44fc8d6e1cb0dc89dd8a09d5cd0.jpeg" srcset="http://0.gravatar.com/avatar/c789f44fc8d6e1cb0dc89dd8a09d5cd0?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-92241"><time pubdate="" datetime="2015-05-16T17:00:57+00:00">May 16, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Gossuinjp</span> </span>				<p>Hello,</p>
+<p>I have thefollowing comment when using the read.trans.</p>
+<p>groceries&lt;-read.transactions("groceries.csv",sep = ",")<br>
+Error in asMethod(object) :<br>
+  can not coerce list with transactions with duplicated items</p>
+<p>can you please advise</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=92241#respond" onclick='return addComment.moveForm( "comment-92241", "92241", "respond", "6190" )' aria-label="Reply to Gossuinjp">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-57752">
+		<article id="comment-57752" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/dfc7757813569879c7d308326528d176.jpeg" srcset="http://1.gravatar.com/avatar/dfc7757813569879c7d308326528d176?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-57752"><time pubdate="" datetime="2014-11-22T19:41:06+00:00">November 22, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Chris</span> </span>				<p>This walk through was incredibly helpful for me. I must thank you.</p>
+<p>Once the analysis is complete, what is the best way to take the 
+results from the console to a report in Excel or a PDF? Any tips there?</p>
+<p>Thanks again!</p>
+<p>Chris</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=57752#respond" onclick='return addComment.moveForm( "comment-57752", "57752", "respond", "6190" )' aria-label="Reply to Chris">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-58259">
+		<article id="comment-58259" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-58259"><time pubdate="" datetime="2014-11-24T11:15:20+00:00">November 24, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Chris! </p>
+<p>Thanks :] glad you found it useful. </p>
+<p>Yes you can write the rules to a CSV files like this:</p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #000066;">write</span><span style="color: #009900;">(</span>rules<span style="color: #339933;">,</span> file <span style="color: #339933;">=</span> <span style="color: #ff0000;">"data.csv"</span><span style="color: #339933;">,</span> quote<span style="color: #339933;">=</span>TRUE<span style="color: #339933;">,</span> sep <span style="color: #339933;">=</span> <span style="color: #ff0000;">","</span><span style="color: #339933;">,</span> col<span style="color: #339933;">.</span>names <span style="color: #339933;">=</span> NA<span style="color: #009900;">)</span></pre></td></tr></tbody></table></div>
+
+<p>You can also save the graph to an image file using <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/png.html" title="JPEG" rel="nofollow">jpeg()</a></p>
+<p>Let us know if that works for you <img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/simple-smile.png" alt=":)" class="wp-smiley" style="height: 1em; max-height: 1em;"></p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=58259#respond" onclick='return addComment.moveForm( "comment-58259", "58259", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-66676">
+		<article id="comment-66676" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/f76e140e8864b7929a1fb22d04b207e2.jpeg" srcset="http://0.gravatar.com/avatar/f76e140e8864b7929a1fb22d04b207e2?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-66676"><time pubdate="" datetime="2014-12-19T05:59:33+00:00">December 19, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://-/" rel="external nofollow" class="url">Bharadwaj</a></span> </span>				<p>I
+ am unable to find itemFrequencyPlot(). I have the arules package 
+installed. Pls let me know where I can find this func. Thanks.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=66676#respond" onclick='return addComment.moveForm( "comment-66676", "66676", "respond", "6190" )' aria-label="Reply to Bharadwaj">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-66889">
+		<article id="comment-66889" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-66889"><time pubdate="" datetime="2014-12-19T18:57:19+00:00">December 19, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Bharadwaj,</p>
+<p>It’s part of the package:<br>
+<a href="http://www.inside-r.org/packages/cran/arules/docs/itemFrequencyPlot" rel="nofollow">http://www.inside-r.org/packages/cran/arules/docs/itemFrequencyPlot</a></p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=66889#respond" onclick='return addComment.moveForm( "comment-66889", "66889", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-71033">
+		<article id="comment-71033" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/8ce2bbea43a16890f291ae6e54d1d55e.jpeg" srcset="http://2.gravatar.com/avatar/8ce2bbea43a16890f291ae6e54d1d55e?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-71033"><time pubdate="" datetime="2015-01-03T09:03:45+00:00">January 3, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">vishu</span> </span>				<p>very
+ nice blog.I am going to work on the same.Can you please tell me which 
+dataset you have used ? I have searched a lot and haven’t got a proper 
+dataset.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=71033#respond" onclick='return addComment.moveForm( "comment-71033", "71033", "respond", "6190" )' aria-label="Reply to vishu">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-71046">
+		<article id="comment-71046" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-71046"><time pubdate="" datetime="2015-01-03T10:41:30+00:00">January 3, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Vishu, </p>
+<p>I used the groceries dataset available in R. </p>
+<p>Thanks!</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=71046#respond" onclick='return addComment.moveForm( "comment-71046", "71046", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-72256">
+		<article id="comment-72256" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/a18a838b08595d6df4c96b4281f50ef0.jpeg" srcset="http://1.gravatar.com/avatar/a18a838b08595d6df4c96b4281f50ef0?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-72256"><time pubdate="" datetime="2015-01-08T08:22:05+00:00">January 8, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Jeremy</span> </span>				<p>Hi Salem,</p>
+<p>I encountered this error when I tried plotting the visualization:<br>
+Error in i.parse.plot.params(graph, list(…)) :<br>
+  object ‘v.color’ not found</p>
+<p>Is there a package dependency I may have missed? Perhaps igraph?<br>
+I used:<br>
+library(arules)<br>
+library(arulesViz)</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=72256#respond" onclick='return addComment.moveForm( "comment-72256", "72256", "respond", "6190" )' aria-label="Reply to Jeremy">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-72277">
+		<article id="comment-72277" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2d8b286ef23015a525e7314646f430ac.jpeg" srcset="http://2.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-72277"><time pubdate="" datetime="2015-01-08T10:52:14+00:00">January 8, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.salemmarafi.com/" rel="external nofollow" class="url">Salem</a></span> </span>				<p>Hi Jeremy,</p>
+<p>After some research it looks like that error is indeed generated by igraph. </p>
+<p>Have you tried install.packages(“igraph”); library(igraph) ?</p>
+<p>Salem</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=72277#respond" onclick='return addComment.moveForm( "comment-72277", "72277", "respond", "6190" )' aria-label="Reply to Salem">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment even depth-3" id="li-comment-76405">
+		<article id="comment-76405" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/ea0c3d6ec8022c96c40e97f50d86592f.jpeg" srcset="http://2.gravatar.com/avatar/ea0c3d6ec8022c96c40e97f50d86592f?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-76405"><time pubdate="" datetime="2015-01-27T12:09:27+00:00">January 27, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Stavit</span> </span>				<p>Hi,</p>
+<p>After installing the igraph I am still encounter with the same error.. any ideas?….<br>
+This is what i am trying to run:<br>
+&gt; library(igraph)<br>
+&gt; library(arulesViz)<br>
+&gt; plot(rules,method=”graph”,interactive=TRUE,shading=NA)<br>
+Error in i.parse.plot.params(graph, list(…)) :<br>
+  object ‘v.color’ not found</p>
+<p>Also, do you happened to know if there are other MBA algorithms which was implemented in R?… </p>
+<p>Thanks.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=76405#respond" onclick='return addComment.moveForm( "comment-76405", "76405", "respond", "6190" )' aria-label="Reply to Stavit">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt depth-3" id="li-comment-77993">
+		<article id="comment-77993" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/e0019136f86b5ccd14371b20086a7f17.jpeg" srcset="http://2.gravatar.com/avatar/e0019136f86b5ccd14371b20086a7f17?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-77993"><time pubdate="" datetime="2015-02-04T19:49:59+00:00">February 4, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Tesh</span> </span>				<p>Thank
+ you Salem for this wonderful review. I also get the same error, even 
+after installing/ loading igraph. I am running the latest version of R 
+as well. </p>
+<p>Please let me know if you have any other suggestions.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=77993#respond" onclick='return addComment.moveForm( "comment-77993", "77993", "respond", "6190" )' aria-label="Reply to Tesh">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even depth-2" id="li-comment-81662">
+		<article id="comment-81662" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/478cbc5582745dd46b780a8151d12a81.jpeg" srcset="http://1.gravatar.com/avatar/478cbc5582745dd46b780a8151d12a81?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-81662"><time pubdate="" datetime="2015-03-05T11:49:33+00:00">March 5, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Lucie</span> </span>				<p>Hi, did you find a solution? I get the same error despite<br>
+– installing igraph,<br>
+– re-installing tcltk =&gt; capabilities(“tcltk”)  result is TRUE</p>
+<p>I use R 3.1.2 binary for Mac OS X 10.9 (Mavericks) and higher. Therefore I also re-installed XQuartz.</p>
+<p>Thanks for any advice!<br>
+Cheers,Lucie</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=81662#respond" onclick='return addComment.moveForm( "comment-81662", "81662", "respond", "6190" )' aria-label="Reply to Lucie">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment odd alt depth-3" id="li-comment-82638">
+		<article id="comment-82638" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/61c2c9ceb0ba26f7aa1c434d1ed71782.jpeg" srcset="http://0.gravatar.com/avatar/61c2c9ceb0ba26f7aa1c434d1ed71782?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-82638"><time pubdate="" datetime="2015-03-11T13:59:01+00:00">March 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">panini73</span> </span>				<p>Within the apriori function, in parameter = list(…); provide target =<br>
+It can be one of  “frequent itemsets”,  “maximally frequent itemsets”, “closed frequent itemsets”,  “rules”, “hyperedgesets”<br>
+Works for all but rules, which still gives the error. So I hazard a guess that it is internal (?).<br>
+Others give you nice graphs.<br>
+Hope this helps.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=82638#respond" onclick='return addComment.moveForm( "comment-82638", "82638", "respond", "6190" )' aria-label="Reply to panini73">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even depth-2" id="li-comment-95954">
+		<article id="comment-95954" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/61d7da4712627b8f4b4341a16e4f124f.jpeg" srcset="http://0.gravatar.com/avatar/61d7da4712627b8f4b4341a16e4f124f?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-95954"><time pubdate="" datetime="2015-07-26T16:46:53+00:00">July 26, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Bill</span> </span>				<p>I was able to get the diagram by changing the shading to TRUE from the sample NA:</p>
+<p>plot(rules,method=”graph”,interactive=TRUE,shading=TRUE)</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=95954#respond" onclick='return addComment.moveForm( "comment-95954", "95954", "respond", "6190" )' aria-label="Reply to Bill">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-74658">
+		<article id="comment-74658" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/b2ecf0ffba68d02b1daf5169457dccac.jpeg" srcset="http://2.gravatar.com/avatar/b2ecf0ffba68d02b1daf5169457dccac?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-74658"><time pubdate="" datetime="2015-01-19T01:29:18+00:00">January 19, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">shecode</span> </span>				<p>I would like to use this example after doing some cleaning of my text (i.e. using tm_map to remove stop words etc<br>
+I have a corpus data structure – how do I convert this into the structure you are using?</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=74658#respond" onclick='return addComment.moveForm( "comment-74658", "74658", "respond", "6190" )' aria-label="Reply to shecode">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-76492">
+		<article id="comment-76492" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/54ac62bbc211cadd0a798baa5f1f873b.jpeg" srcset="http://2.gravatar.com/avatar/54ac62bbc211cadd0a798baa5f1f873b?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-76492"><time pubdate="" datetime="2015-01-28T07:52:40+00:00">January 28, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href="http://www.sundaykart.com/" rel="external nofollow" class="url">jagadish kumar</a></span> </span>				<p>i dont understand the concept of MBA is good but there is no link  to the coding and the output<br>
+i want an example application for mad but according to your coding the 
+output is displaying like v1 v2 v3 observations and N/A and FALSE there 
+is no comparing and no items so please give me a valid example</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=76492#respond" onclick='return addComment.moveForm( "comment-76492", "76492", "respond", "6190" )' aria-label="Reply to jagadish kumar">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-77571">
+		<article id="comment-77571" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/d6e572ce4cb72ef8bfd6f94e220b4080.jpeg" srcset="http://1.gravatar.com/avatar/d6e572ce4cb72ef8bfd6f94e220b4080?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-77571"><time pubdate="" datetime="2015-02-03T07:28:01+00:00">February 3, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Lagnajita</span> </span>				<p>Hello,</p>
+<p>If I using data drawn from an excel sheet instead of the dataset does
+ it require extra coding. I tried using the data without any change to 
+the data and received an error message. </p>
+<p>Thanks.</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=77571#respond" onclick='return addComment.moveForm( "comment-77571", "77571", "respond", "6190" )' aria-label="Reply to Lagnajita">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-78010">
+		<article id="comment-78010" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/e0019136f86b5ccd14371b20086a7f17.jpeg" srcset="http://2.gravatar.com/avatar/e0019136f86b5ccd14371b20086a7f17?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-78010"><time pubdate="" datetime="2015-02-04T21:46:27+00:00">February 4, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Tesh</span> </span>				<p>Actually, I may have solved it. </p>
+<p>Setting the target=”hyperedgesets”<br>
+seems to create a graphable object. I am still very new to this so I’m 
+not sure if there is a way to make the original work. The graphs 
+produced this way show baskets that the genes belong to and not the 
+genes connected to each other. </p>
+<p>rules2 &lt;- apriori(y, parameter = list(supp = 0.001, conf = 0.8, target="hyperedgesets"))<br>
+plot(rules2,method="graph", interactive=TRUE, shading=NA)</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=78010#respond" onclick='return addComment.moveForm( "comment-78010", "78010", "respond", "6190" )' aria-label="Reply to Tesh">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-79062">
+		<article id="comment-79062" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/31417d026fe71f4ea10ffb348106539d.jpeg" srcset="http://0.gravatar.com/avatar/31417d026fe71f4ea10ffb348106539d?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-79062"><time pubdate="" datetime="2015-02-11T08:53:10+00:00">February 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Naga Harish</span> </span>				<p>Hi Salem,</p>
+<p>The article is too good got a clear picture of market basket 
+analysis.Thank you. I am actually looking for real market basket 
+datasets for one of my academic projects, so if you have any or if you 
+know something about it please let me know. Thanks in advance.</p>
+<p>Regards<br>
+Harish</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=79062#respond" onclick='return addComment.moveForm( "comment-79062", "79062", "respond", "6190" )' aria-label="Reply to Naga Harish">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-79410">
+		<article id="comment-79410" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2cf5c67886ae168ab0a63517525f85c9.jpeg" srcset="http://2.gravatar.com/avatar/2cf5c67886ae168ab0a63517525f85c9?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-79410"><time pubdate="" datetime="2015-02-14T07:31:04+00:00">February 14, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Maila</span> </span>				<p>Hi Salem,</p>
+<p>Thanks for great article.<br>
+can you tell me how can I upload my own data(.csv file, similar to groceries file)<br>
+I have data in my desktop folder. how do I set path for that?<br>
+Also, I too got this error<br>
+Error in i.parse.plot.params(graph, list(…)) :<br>
+object ‘v.color’ not found</p>
+<p>Thanks</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=79410#respond" onclick='return addComment.moveForm( "comment-79410", "79410", "respond", "6190" )' aria-label="Reply to Maila">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-79516">
+		<article id="comment-79516" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/2cf5c67886ae168ab0a63517525f85c9.jpeg" srcset="http://2.gravatar.com/avatar/2cf5c67886ae168ab0a63517525f85c9?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-79516"><time pubdate="" datetime="2015-02-15T05:04:05+00:00">February 15, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Maila</span> </span>				<p>This is me again<br>
+Finally, I able to load my file and able to run some rules<br>
+but the result came like this<br>
+ inspect(rules[1:4])<br>
+  lhs         rhs      support confidence   lift<br>
+1 {}       =&gt; { true}  0.99853    0.99853 1.0000<br>
+2 {}       =&gt; { false} 0.99853    0.99853 1.0000<br>
+3 { true}  =&gt; { false} 0.99780    0.99926 1.0007<br>
+4 { false} =&gt; { true}  0.99780    0.99926 1.0007</p>
+<p>it is because my dataset in this format:<br>
+Basket ID	 Candy	 Lemons	 coffee	 milk<br>
+C11867	 false	 false	 false	 false<br>
+C5096	 false	 false	 false	 false<br>
+C4295	 false	 false	 false	 false</p>
+<p>can you give some hint, how would I change this data to transaction matrix</p>
+<p>Thanks</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=79516#respond" onclick='return addComment.moveForm( "comment-79516", "79516", "respond", "6190" )' aria-label="Reply to Maila">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-79937">
+		<article id="comment-79937" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/32d456b8027fe7009819a7d52cd4c1db.jpeg" srcset="http://0.gravatar.com/avatar/32d456b8027fe7009819a7d52cd4c1db?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-79937"><time pubdate="" datetime="2015-02-19T11:10:01+00:00">February 19, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">shan</span> </span>				<p>Hi Salem..</p>
+<p>This article is very useful.<br>
+If possible can we have an article on customer churning model.<br>
+Your help in this regard will be highly appreciated.<br>
+Thanks…</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=79937#respond" onclick='return addComment.moveForm( "comment-79937", "79937", "respond", "6190" )' aria-label="Reply to shan">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-81208">
+		<article id="comment-81208" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/10e2f40876f5ef8243ffc30f1b906cb0.jpeg" srcset="http://1.gravatar.com/avatar/10e2f40876f5ef8243ffc30f1b906cb0?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-81208"><time pubdate="" datetime="2015-03-03T00:48:52+00:00">March 3, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Kevin</span> </span>				<p>Real
+ great stuff here. I was wondering if you knew of any transactions data 
+sets like Groceries that also contained customer attributes (such as a 
+customer ID linked to demographic variables) for each transaction? I’d 
+like to extend this analysis to incorporate some of those factors, but I
+ haven’t been able to find a suitable dataset. </p>
+<p>Regards,</p>
+<p>Kevin</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=81208#respond" onclick='return addComment.moveForm( "comment-81208", "81208", "respond", "6190" )' aria-label="Reply to Kevin">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-83149">
+		<article id="comment-83149" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/6afa994743192f3366a2ffc860f0c8ea.jpeg" srcset="http://0.gravatar.com/avatar/6afa994743192f3366a2ffc860f0c8ea?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-83149"><time pubdate="" datetime="2015-03-14T20:26:26+00:00">March 14, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">DP</span> </span>				<p>Hi,<br>
+thanks for this article.<br>
+Just a question: do you have set the minimum support and confidence 
+using some information from the plot or do you have used the default ?</p>
+<p>There are according to you some rule of thumb that I can use to set properly these parameters?</p>
+<p>Thank you in advance,<br>
+DP</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=83149#respond" onclick='return addComment.moveForm( "comment-83149", "83149", "respond", "6190" )' aria-label="Reply to DP">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-83152">
+		<article id="comment-83152" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/6afa994743192f3366a2ffc860f0c8ea.jpeg" srcset="http://0.gravatar.com/avatar/6afa994743192f3366a2ffc860f0c8ea?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-83152"><time pubdate="" datetime="2015-03-14T20:52:07+00:00">March 14, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">DP</span> </span>				<p>HI,</p>
+<p>An additional question: how I have to set my dataset in order to use the apriori algorithm?<br>
+Do you think that  a dataset like that below should be ok?</p>
+<p>ID      Product<br>
+1         A<br>
+1         A<br>
+1         B<br>
+2         C<br>
+2         A</p>
+<p>Thanks,<br>
+DP</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=83152#respond" onclick='return addComment.moveForm( "comment-83152", "83152", "respond", "6190" )' aria-label="Reply to DP">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-83437">
+		<article id="comment-83437" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/30e74c1457d5e645f26d40e1995af16e.jpeg" srcset="http://0.gravatar.com/avatar/30e74c1457d5e645f26d40e1995af16e?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-83437"><time pubdate="" datetime="2015-03-16T11:43:31+00:00">March 16, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Ans Elk</span> </span>				<p>Excellent article, thank you sir ! <img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/simple-smile.png" alt=":)" class="wp-smiley" style="height: 1em; max-height: 1em;"></p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=83437#respond" onclick='return addComment.moveForm( "comment-83437", "83437", "respond", "6190" )' aria-label="Reply to Ans Elk">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-89276">
+		<article id="comment-89276" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/486ac77161fe4594ab7247443615ed20.jpeg" srcset="http://1.gravatar.com/avatar/486ac77161fe4594ab7247443615ed20?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-89276"><time pubdate="" datetime="2015-04-23T12:34:24+00:00">April 23, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">CRISTINE</span> </span>				<p>Hi,</p>
+<p>there is the solution: it works perfectly</p>
+<p>plot(rules,method=”graph”,interactive=TRUE,shading=T)</p>
+<p>United we stand</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=89276#respond" onclick='return addComment.moveForm( "comment-89276", "89276", "respond", "6190" )' aria-label="Reply to CRISTINE">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-91695">
+		<article id="comment-91695" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/71f5e1c87f74bbd6ea12f7461d281b80.jpeg" srcset="http://1.gravatar.com/avatar/71f5e1c87f74bbd6ea12f7461d281b80?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-91695"><time pubdate="" datetime="2015-05-11T20:36:35+00:00">May 11, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Tania</span> </span>				<p>Hi Salem,<br>
+I’m trying to mine association rules on a 20,000 transactions dataset. 
+When I try to get the item frequency plot I got this message:</p>
+<p>Errore in (function (classes, fdef, mtable)  :<br>
+  unable to find an inherited method for function ‘itemFrequencyPlot’ for signature ‘”matrix”’</p>
+<p>Could you help me please?<br>
+Tania</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=91695#respond" onclick='return addComment.moveForm( "comment-91695", "91695", "respond", "6190" )' aria-label="Reply to Tania">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-92785">
+		<article id="comment-92785" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/94d125bb70ed38b9fbcffdad18eb8798.jpeg" srcset="http://0.gravatar.com/avatar/94d125bb70ed38b9fbcffdad18eb8798?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-92785"><time pubdate="" datetime="2015-05-24T13:04:05+00:00">May 24, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Survi`</span> </span>				<p>Please advise on how to use my own csv file for such an analysis. Someone pls mail me the code. urgent</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=92785#respond" onclick='return addComment.moveForm( "comment-92785", "92785", "respond", "6190" )' aria-label="Reply to Survi`">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-93756">
+		<article id="comment-93756" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/337f7918b9261692be203fdd8dc33aad.jpeg" srcset="http://0.gravatar.com/avatar/337f7918b9261692be203fdd8dc33aad?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-93756"><time pubdate="" datetime="2015-06-13T00:11:51+00:00">June 13, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Venkata Duvvuri</span> </span>				<p>Great blog. I used apriori to generate rules. How Can i apply the rules to new dataset to predict RHS?</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=93756#respond" onclick='return addComment.moveForm( "comment-93756", "93756", "respond", "6190" )' aria-label="Reply to Venkata Duvvuri">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-94031">
+		<article id="comment-94031" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/b362b1df1c91d89cacd75e1b991256d4.jpeg" srcset="http://2.gravatar.com/avatar/b362b1df1c91d89cacd75e1b991256d4?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-94031"><time pubdate="" datetime="2015-06-19T22:58:51+00:00">June 19, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Udit</span> </span>				<p>This is just to help people who are using csv files</p>
+<p>use read.transactions() than read.csv() for the reason that read.csv() would return data frame with automatic column names</p>
+<p>Using MyData&lt;-read.csv() would return data frame in MyData but now
+ when you pass this MyData to apriori, it will accept it but give the 
+column names as V1 , V2 and the result will be distorted</p>
+<p>hence use MyData&lt;- read.transactions()</p>
+<p>In the above example Groceries is already transaction data</p>
+<p>Hence there was no confusion but when importing transactions from csv file, remember the above rules</p>
+<p>I was myself facing the problem when I came through this post</p>
+<p><a href="https://prdeepakbabu.wordpress.com/2010/11/13/market-basket-analysisassociation-rule-mining-using-r-package-arules/" rel="nofollow">https://prdeepakbabu.wordpress.com/2010/11/13/market-basket-analysisassociation-rule-mining-using-r-package-arules/</a></p>
+<p>Hope it helps</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=94031#respond" onclick='return addComment.moveForm( "comment-94031", "94031", "respond", "6190" )' aria-label="Reply to Udit">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-95391">
+		<article id="comment-95391" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt="" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/19fd7951b7d536a59651ac008c662b27.jpeg" srcset="http://1.gravatar.com/avatar/19fd7951b7d536a59651ac008c662b27?s=272&amp;d=mm&amp;r=g 2x" class="avatar avatar-136 photo" height="136" width="136">				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/comment-page-1/#comment-95391"><time pubdate="" datetime="2015-07-15T13:54:06+00:00">July 15, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Yong</span> </span>				<p>FYI:: If you don’t include [shading=N] option then  you may skip the error [object ‘v.color’ not found]  .</p>
+				<div class="reply">
+					<a class="comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/?replytocom=95391#respond" onclick='return addComment.moveForm( "comment-95391", "95391", "respond", "6190" )' aria-label="Reply to Yong">Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+		</ol>
+
+		
+	
+							<div id="respond" class="comment-respond">
+				<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/#respond" style="display:none;">Cancel reply</a></small></h3>
+									<form action="http://www.salemmarafi.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+																			<p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p>							<p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" size="30" aria-required="true" required="required" type="text"></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" size="30" aria-describedby="email-notes" aria-required="true" required="required" type="text"></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" size="30" type="text"></p>
+												<p class="comment-form-comment"><label for="comment">Comment</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-describedby="form-allowed-tags" aria-required="true" required="required"></textarea></p>						<p class="form-allowed-tags" id="form-allowed-tags">You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:  <code>&lt;a
+ href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; 
+&lt;b&gt; &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del 
+datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=""&gt; &lt;s&gt; 
+&lt;strike&gt; &lt;strong&gt; </code></p>
+						<p class="form-submit"><input name="submit" id="submit" class="submit" value="Post Comment" type="submit"> <input name="comment_post_ID" value="6190" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+</p><p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="2374132870" type="hidden"></p><p style="display: none;"></p>					<input id="ak_js" name="ak_js" value="1444671285964" type="hidden"></form>
+							</div><!-- #respond -->
+			
+</div><!-- #comments -->
+        	</div>
+        </div><!-- .postcomments -->
+
+		
+	<!-- END .eight columns -->
+	</div>
+	
+	<div class="four columns">
+	    <div class="sidebar">
+ 
+	<div id="search-4" class="widget widget_search"><h4 class="title">Search</h4><form method="get" id="searchform" action="http://www.salemmarafi.com/">
+            <label for="s"></label>
+            <div><input value="Search Site" name="s" id="s" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" type="text"><input id="searchsubmit" value="Go" type="submit">
+            </div>
+            </form></div><div id="categories-4" class="widget widget_categories"><h4 class="title">Topics</h4>		<ul>
+	<li class="cat-item cat-item-330"><a href="http://www.salemmarafi.com/category/books/">Books</a>
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.salemmarafi.com/category/business/">Business</a>
+</li>
+	<li class="cat-item cat-item-15"><a href="http://www.salemmarafi.com/category/code/">Code</a>
+</li>
+	<li class="cat-item cat-item-26"><a href="http://www.salemmarafi.com/category/personal/">Personal</a>
+</li>
+		</ul>
+</div><div id="tag_cloud-4" class="widget widget_tag_cloud"><h4 class="title">Tag Cloud</h4><div class="tagcloud"><a href="http://www.salemmarafi.com/tag/alphabet/" class="tag-link-28" title="1 topic" style="font-size: 8pt;">alphabet</a>
+<a href="http://www.salemmarafi.com/tag/books-2/" class="tag-link-37" title="1 topic" style="font-size: 8pt;">books</a>
+<a href="http://www.salemmarafi.com/tag/code-2/" class="tag-link-336" title="2 topics" style="font-size: 10.964705882353pt;">code</a>
+<a href="http://www.salemmarafi.com/tag/conflict/" class="tag-link-60" title="2 topics" style="font-size: 10.964705882353pt;">conflict</a>
+<a href="http://www.salemmarafi.com/tag/cookie/" class="tag-link-340" title="1 topic" style="font-size: 8pt;">cookie</a>
+<a href="http://www.salemmarafi.com/tag/cookies/" class="tag-link-56" title="2 topics" style="font-size: 10.964705882353pt;">cookies</a>
+<a href="http://www.salemmarafi.com/tag/decision/" class="tag-link-59" title="3 topics" style="font-size: 12.941176470588pt;">decision</a>
+<a href="http://www.salemmarafi.com/tag/decision-book/" class="tag-link-38" title="1 topic" style="font-size: 8pt;">decision book</a>
+<a href="http://www.salemmarafi.com/tag/eisenhower/" class="tag-link-46" title="1 topic" style="font-size: 8pt;">eisenhower</a>
+<a href="http://www.salemmarafi.com/tag/excel/" class="tag-link-47" title="2 topics" style="font-size: 10.964705882353pt;">excel</a>
+<a href="http://www.salemmarafi.com/tag/exercise/" class="tag-link-33" title="1 topic" style="font-size: 8pt;">exercise</a>
+<a href="http://www.salemmarafi.com/tag/filtering/" class="tag-link-352" title="1 topic" style="font-size: 8pt;">filtering</a>
+<a href="http://www.salemmarafi.com/tag/food/" class="tag-link-22" title="1 topic" style="font-size: 8pt;">food</a>
+<a href="http://www.salemmarafi.com/tag/health/" class="tag-link-32" title="3 topics" style="font-size: 12.941176470588pt;">health</a>
+<a href="http://www.salemmarafi.com/tag/hi3/" class="tag-link-31" title="1 topic" style="font-size: 8pt;">hi3</a>
+<a href="http://www.salemmarafi.com/tag/innovation/" class="tag-link-54" title="1 topic" style="font-size: 8pt;">innovation</a>
+<a href="http://www.salemmarafi.com/tag/javascript/" class="tag-link-48" title="1 topic" style="font-size: 8pt;">javascript</a>
+<a href="http://www.salemmarafi.com/tag/kuwait/" class="tag-link-5" title="3 topics" style="font-size: 12.941176470588pt;">kuwait</a>
+<a href="http://www.salemmarafi.com/tag/launch/" class="tag-link-25" title="1 topic" style="font-size: 8pt;">launch</a>
+<a href="http://www.salemmarafi.com/tag/management-2/" class="tag-link-45" title="9 topics" style="font-size: 19.529411764706pt;">management</a>
+<a href="http://www.salemmarafi.com/tag/marketing/" class="tag-link-14" title="4 topics" style="font-size: 14.588235294118pt;">Marketing</a>
+<a href="http://www.salemmarafi.com/tag/model/" class="tag-link-52" title="1 topic" style="font-size: 8pt;">model</a>
+<a href="http://www.salemmarafi.com/tag/models/" class="tag-link-42" title="3 topics" style="font-size: 12.941176470588pt;">models</a>
+<a href="http://www.salemmarafi.com/tag/money/" class="tag-link-102" title="2 topics" style="font-size: 10.964705882353pt;">money</a>
+<a href="http://www.salemmarafi.com/tag/morphological-box/" class="tag-link-53" title="1 topic" style="font-size: 8pt;">morphological box</a>
+<a href="http://www.salemmarafi.com/tag/networks/" class="tag-link-51" title="1 topic" style="font-size: 8pt;">networks</a>
+<a href="http://www.salemmarafi.com/tag/new-product-development/" class="tag-link-55" title="1 topic" style="font-size: 8pt;">new product development</a>
+<a href="http://www.salemmarafi.com/tag/performance/" class="tag-link-81" title="2 topics" style="font-size: 10.964705882353pt;">performance</a>
+<a href="http://www.salemmarafi.com/tag/personal-2/" class="tag-link-92" title="3 topics" style="font-size: 12.941176470588pt;">personal</a>
+<a href="http://www.salemmarafi.com/tag/personals/" class="tag-link-27" title="1 topic" style="font-size: 8pt;">personals</a>
+<a href="http://www.salemmarafi.com/tag/poem/" class="tag-link-341" title="1 topic" style="font-size: 8pt;">poem</a>
+<a href="http://www.salemmarafi.com/tag/price-elasticity/" class="tag-link-366" title="2 topics" style="font-size: 10.964705882353pt;">price elasticity</a>
+<a href="http://www.salemmarafi.com/tag/product/" class="tag-link-24" title="1 topic" style="font-size: 8pt;">product</a>
+<a href="http://www.salemmarafi.com/tag/qooqie/" class="tag-link-342" title="1 topic" style="font-size: 8pt;">qooqie</a>
+<a href="http://www.salemmarafi.com/tag/r/" class="tag-link-335" title="13 topics" style="font-size: 22pt;">R</a>
+<a href="http://www.salemmarafi.com/tag/relationships/" class="tag-link-50" title="1 topic" style="font-size: 8pt;">relationships</a>
+<a href="http://www.salemmarafi.com/tag/search/" class="tag-link-49" title="1 topic" style="font-size: 8pt;">search</a>
+<a href="http://www.salemmarafi.com/tag/spending/" class="tag-link-20" title="3 topics" style="font-size: 12.941176470588pt;">spending</a>
+<a href="http://www.salemmarafi.com/tag/strategy/" class="tag-link-39" title="2 topics" style="font-size: 10.964705882353pt;">strategy</a>
+<a href="http://www.salemmarafi.com/tag/sugar/" class="tag-link-362" title="2 topics" style="font-size: 10.964705882353pt;">sugar</a>
+<a href="http://www.salemmarafi.com/tag/tagged/" class="tag-link-29" title="1 topic" style="font-size: 8pt;">tagged</a>
+<a href="http://www.salemmarafi.com/tag/time-management/" class="tag-link-44" title="1 topic" style="font-size: 8pt;">time management</a>
+<a href="http://www.salemmarafi.com/tag/tools-2/" class="tag-link-43" title="9 topics" style="font-size: 19.529411764706pt;">tools</a>
+<a href="http://www.salemmarafi.com/tag/trends/" class="tag-link-19" title="2 topics" style="font-size: 10.964705882353pt;">trends</a>
+<a href="http://www.salemmarafi.com/tag/twitter/" class="tag-link-338" title="2 topics" style="font-size: 10.964705882353pt;">twitter</a></div>
+</div>    
+</div> 
+	</div><!-- .four columns -->
+
+
+<!-- END .row -->
+</div>
+
+<div class="clear"></div>
+
+<div id="footer">
+
+	<div class="row">
+	
+		<div class="eleven columns">
+
+			<div class="left">
+		        <p>Copyright © 2015 · All Rights Reserved · Salem Marafi</p>
+		
+		        <p><a href="http://www.salemmarafi.com/feed/">RSS Feed</a> · <a href="http://www.salemmarafi.com/wp-login.php">Log in</a></p>
+		    </div>
+		    
+		    <div class="right">
+				<a href="http://www.salemmarafi.com/" title="Designer WordPress Themes" target="_blank"><img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/favicon.png" alt="Organic Themes"></a>
+			</div>
+		
+		</div>
+		
+		<div class="one column">
+			<div id="back-top">
+				<a class="scroll" href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/#header">
+					<img src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/back_top.png" title="Top" alt="Top">
+					<p>Top</p>
+				</a>
+			</div>
+		</div>
+	
+	<!-- END .row -->
+	</div>
+
+<!-- END #footer -->
+</div>
+
+<!-- END .container -->
+</div>
+ 
+
+
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/form.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var thickboxL10n = {"next":"Next >","prev":"< Prev","image":"Image","of":"of","close":"Close","noiframes":"This feature requires inline frames. You have iframes disabled or your browser does not support them.","loadingAnimation":"http:\/\/www.salemmarafi.com\/wp-includes\/js\/thickbox\/loadingAnimation.gif"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/thickbox.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/comment-reply.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/jquery.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var _wpcf7 = {"loaderUrl":"http:\/\/www.salemmarafi.com\/wp-content\/plugins\/contact-form-7\/images\/ajax-loader.gif","sending":"Sending ...","cached":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/scripts.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/superfish.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/hoverIntent.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/jquery_003.js"></script>
+<script type="text/javascript" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/jquery_002.js"></script>
+
+
+
+
+
+
+<iframe tabindex="-1" style="width: 1px; height: 1px; position: absolute; top: -100px;" src="Market%20Basket%20Analysis%20with%20R%20:%20Salem%20Marafi_files/postmessageRelay.html" id="oauth2relay625804096" name="oauth2relay625804096"></iframe></body></html>
+<!-- Dynamic page generated in 1.741 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2015-10-12 14:55:10 -->

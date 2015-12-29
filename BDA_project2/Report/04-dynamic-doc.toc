@@ -1,0 +1,25 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Abstract}{4}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Introduction}{4}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Algorithm Description}{5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.1}Apriori Algorithm}{5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.2}FP Growth algorithm for frequent pattern generation}{6}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.2.1}FP-Tree Representation}{7}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.2.2}Frequent Itemset Generation in FP-Growth Algorithm}{8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Data set description}{8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Result and Discussions}{10}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1}Apriori algorithm}{10}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.2}FP Growth algorithm}{17}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Conclusion}{18}

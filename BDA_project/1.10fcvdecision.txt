@@ -1,0 +1,71 @@
+Cross validation is a resampling approach which enables to obtain a more honest error rate estimate of the tree computed on the whole dataset. 
+The cross validation consists to randomly split the data in K folds. We reiterate the following process, by turning the sub-samples: learning the model on (K-1) folds, computing the error rate on the fold number K. 
+The error rate in cross-validation is the mean of these error rates collected. 
+
+We observe that we have the same number of examples in each fold.we applied 10-fold cross validation on 1000 samples of the german credit dataset.
+<<echo=FALSE>>=
+library(rpart)
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+#The runif() function can be used to simulate n independent uniform random variables.
+unirand<-runif(n)
+#rank returns the lowest order of position, returns the sample ranks of the values in a vector.
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+@
+We can repeat now the learning process and the test process. We collect each error rate,sensitivity,specificity in a vector.
+
+Printing Each sub-sample's of sensitivity ,specificity and error rate:
+<<echo=FALSE>>=
+all.err<- numeric(0)
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+#all.acc1<-numeric(0)
+for(k in 1:K){
+arbre <- rpart(R01_credibility ~., data = dataset[bloc!=k,], method = "class")
+pred <- predict(arbre,newdata = dataset[bloc==k,],type = "class")
+#confusion matrix for each partition
+mc<-table(dataset$R01_credibility[bloc==k],pred)
+err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+a<-mc[1,1]
+b<-mc[1,1]+mc[1,2]
+sensitivity<-a/b
+c<-mc[2,2]
+d<-mc[2,2]+mc[2,1]
+specificity<-c/d
+#function combines vector, matrix or data frame by rows.
+all.sense<-rbind(all.sense,sensitivity)
+all.spese<-rbind(all.spese,specificity)
+all.err <- rbind(all.err,err)
+#acc1<-1-(err)
+#all.acc1<-rbind(all.acc1,acc1)
+}
+print(all.sense)
+print(all.spese)
+print(all.err)
+#print(all.acc1)
+@
+Because we have the same number of examples in each fold, we can compute unweighted mean.
+
+This is the average of each sub-sample's sensitivity:
+<<echo=FALSE>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+This is the average of each sub-sample's specificity:
+<<echo=FALSE>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+This is the cross validation error rate estimation:
+<<echo=FALSE>>=
+err.cv<-mean(all.err)
+#acc1.cv<-mean(all.acc1)
+#print(acc1.cv)
+print(err.cv)
+@

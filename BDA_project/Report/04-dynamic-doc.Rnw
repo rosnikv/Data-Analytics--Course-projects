@@ -1,0 +1,2087 @@
+\documentclass{article}
+%\usepackage[margin=1in]{geometry}   % set up margins
+\usepackage[vmargin=1in,hmargin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+\usepackage[backend=bibtex]{biblatex}
+
+
+\thispagestyle{empty}
+\begin{center}
+\begin{minipage}{1.2\linewidth}
+    \centering
+ %   \rule{0.4\linewidth}{0.15\linewidth}\par
+    \vspace{3cm}
+%Thesis title
+    \textbf{{\uppercase{\Large German Credit Data Scoring using R\par}}}
+    \vspace{2cm}
+    %Degree
+    {\Large Business and Data Analytics \par}
+    {\textit{\hspace{0.5cm}Project Report} \par}
+    \vspace{2cm}
+    %University logo
+   \hspace{1.9cm} \includegraphics[width=0.35\linewidth]{hyderabad-university-publishes-mtech.jpg}\newline
+    
+    {\textit{\hspace{0.5cm}Submitted by} \par}
+%Author's name
+  \centering
+    {\Large Laltendu Das [15MCMI22]\par}
+    {\Large Uma Revathi K N [15MCMI20]\par}
+    {\Large  Rosni K V [15MCMI15]\par}
+    \vspace{1cm}
+    
+    %Author's name
+    {\textit{\hspace{1cm}Under the Guidance of} \par}
+    {\Large Dr. V.Ravi, Professor, IDRBT \par}
+    \vspace{2cm}
+    \centering
+%Date
+    {\textbf{\Large November 2015}}
+\end{minipage}
+\end{center}
+\clearpage
+
+
+\newpage
+\renewcommand{\contentsname}{\centering Table of Contents}
+\newline
+\newline
+\tableofcontents
+\newpage
+%\renewcommand{\listfigurename}{\centering List of Figures}
+\listoffigures
+%\renewcommand{\listoftables}{\centering List of Tables}
+\listoftables
+\newpage
+
+
+
+\begin{document}
+%\SweaveOpts{concordance=TRUE}
+
+%\title {An Attractive Template of a Reproducible Data Analysis Document for an Awesome Class Project}
+%\author{Mahbubul Majumder, PhD\\ Department of Mathematics\\ University of Nebraska at Omaha }
+
+%\maketitle
+
+<<echo=FALSE, eval=FALSE>>=
+# This chunk is to solve the problem of bibitem
+setwd("/home/freestyler/BDA_project/Report/")
+Sys.setenv(TEXINPUTS=getwd(),
+           BIBINPUTS=getwd(),
+           BSTINPUTS=getwd())
+@
+
+\section{Abstract}
+\hspace{0.5cm} Credit scoring uses quantitative measures of the performance and characteristics of past loans to predict the future performance of loans with similar characteristics. The objective of credit scoring is to help credit providers quantify and manage the financial risk involved in providing credit so that they can make better lending decisions quickly and more objectively. As a result, various kinds of credit scoring models are established to evaluate the customers' credit rank.
+\par A credit scoring system should be able to classify customers as good credit those  who are expected to repay on time and as bad credit those who are expected to fail. A major problem for banks is how to determine the bad credit, because bad credit may cause serious problems in the future. This leads to loss in bank capital, lower bank revenues and subsequently increases bank losses, which can lead to insolvency or bankruptcy. The categorisation of good and bad credit is of fundamental importance, and is indeed the objective of a credit scoring model. Classification models for credit scoring are used to categorize new applicants as either accepted or rejected with respect to these characteristics. In some cases the final selection of the characteristics was based on the statistical analysis used, i.e. logistic regression, neural network etc.
+\par This study illustrates the use of data mining techniques to construct credit scoring models. Also, it illustrates the comparison of credit scoring models to give a superior final model. The report also highlights each data mining approach using R language.\\
+%\end{abstract}
+%\tableofcontents
+
+\section{Introduction} 
+\hspace{0.5cm} Credit scoring is one of the applications for predictive modeling, to predict whether or not credit extended to an applicant will likely result in profit or losses for the lending institution. For instance when a bank provides money to an individual, and expects to be paid back in time with interest commensurate with the risk of default. When a bank grants loan to a new customer, bank uses techniques on the large sample of previous customers with their application details and subsequent credit history available. Applying techniques results in connection between the characteristics of the customers.
+\par Banks use credit risk modeling in order to measure the amount of credit risk which they are exposed to. The most commonly used technique for this purpose is logistic regression. In our study, we applied different techniques like support vector machines, nearest neighbor, decision trees on data to classify the borrowers as good or bad. So that the borrowers which are classified as bad are not granted any credit.
+\par For the experiments, we used the German credit data set which was available in the UCI Repository. The data set consists of 20 attributes (7 numerical and 13 categorical) and there are totally 1000 instances (300 bad and 700 good cases). It was produced by Strathclyde University and is associated with several academic work.
+\par In Section 3 we discussed about the risks that are faced by credit scoring model, to grant loan to a new customer. Section 4 consists of dataset that we are used. Section 5 consists of preprocessing steps that are performed on dataset. Statistical analysis is Basic processing of data,including computing statistical quantities, smoothing, testing, and visualizing, gives a first level of analysis. 
+\par Under data preprocessing we applied chi-square test, statistical-test and principle component analysis on german credit dataset. Data transformation, in this preprocessing step, the data transformed or consolidated so that the resulting mining process may be more efficient, and the patterns found may be easier to understand. Dealing with categorical data poses some limitations. For example, if data contained too many categories there would be a need to combine several categories into one. Recode a categorical variable with character values into a variable with numeric values is done by \textit{as.numeric} funcion which is available in R.
+\par In Section 6, we applied various models on german credit dataset. Our aim is to perform models such as decision tree,support vector machines,logistics regression,k-nearest neighbour and random forest. Analysis of each model on the basis of quality and ROC. We compared each model accuracy and finalised which model is giving better accuracy on given dataset.\\
+%The first sentence of this section is so attractive that it made the reader concentrate on reading. The second sentence is so great that it made the reader forget the date. Rest of the sentences are so nice that at the end of the paragraph the reader can't just wait to see what is coming on the next paragraph. At this point reader does not mind if it gets a little technical.  \\
+%
+%The first sentence of any paragraph presents a clear message. The rest of the sentences just describe that idea and establish the facts so that the reader see the logical conclusion of the paragraph. The last sentence of the paragraph connects the following paragraphs or section.  \\
+%
+%Add some motivational pictures in this section whenever possible. This will provide the reader some relief from reading text after text. For example Figure \ref{fig:nice-plot} indeed make us happy that we have something else to concentrate. This motivational picture does not need to be generated from the data you are going to analyze. Notice that we added the \textbf{R} codes of generating the Figure~\ref{fig:nice-plot}.
+%
+%If we don't want to display the R codes, we just put option \texttt{echo=FALSE} in the head of the chunk. To add caption for the figure we write the caption in \texttt{fig.cap=`my figure captions'}.
+%
+%%%%%%<<nice-plot, fig.cap="My awesome figure caption really describes what this figure is about and what we see in this figure. Also notice that the figure size is kept in such a way that it fits in the text nicely - not too big nor too small", fig.width=4, fig.height=4, fig.align='center',fig.pos="hbtp",out.width='.45\\linewidth'>>=
+%plot(women)
+%@
+
+%Also please don't forget to explain in details about what this figure is telling. It is really a bad idea not to say anything about the figure when you added it. Its like a product you are selling to someone who don't want to buy it. So, you have to be very serious about selling it with convincing argument.
+
+%\subsection{Preparing this document} 
+%This whole document is prepared using \textbf{R}  \cite{R-base} package \texttt{knitr} \cite{R-knitr}. It is a dynamic document and reproducible any number of times for any data sets. To start our work conveniently we need to install \textbf{R}, \texttt{RStudio} and \LaTeX{} \cite{lamport94} . Once our installation is done we will configure \texttt{RStudio} to work with \texttt{knitr}. For this first install \texttt{knitr} using command \texttt{install.packages("knitr")} and include the \texttt{knitr} library by command \texttt{library(knitr)}. Once \texttt{knitr} is installed go to the \texttt{RStudio} menu \texttt{Tools > Global Options...Sweave} and change `Weave Rnw files using' to indicate \texttt{Knitr}.\\
+
+%Now we are ready to create our first document using \texttt{knitr}. Go to \texttt{File > New File > R Sweave} and it will start with a new template for a document. If you save this minimal template it will be saved as a \texttt{.Rnw} file. Now we can just start filling the template with our texts. To create a human readable pdf file from \texttt{.Rnw} we just click on \texttt{Compile PDF} in \texttt{RStudio} toolbar. \\
+
+%{\bf PDF latex failure:} If you encounter any problem such as \texttt{Running pdflatex on ...failed} it could be due to the bibliography. To solve that problem what you can do is: Go back to the folder where you saved your \texttt{.Rnw} file and find the \texttt{.tex} file that is created automatically. Now run the \texttt{.tex} file from \LaTeX{} editor to create the pdf. Once you do this multiple times your bibliographies would be updated and you will be ready to work from \texttt{RStudio} as long as you don't change any object that has references in the file. There may be a better solution for this, but so far this worked for me. \\
+
+%The solution for this problem: just add \texttt{\textbackslash usepackage[backend=bibtex]{biblatex}} in your preamble of the \texttt{.Rnw} file.
+\section{Problem definition}\hspace{0.5cm}To develop a credit scoring model to predict the credit risk of applicants as bad risk(default) and good risk, which will help credit providers decide whether to grant loan to customers or not. The associated task for this problem is classification, and the German Credit Data set(source::UCI Machine Learning Repository) \cite{[2]} is using.
+
+\section{About the data} \hspace{0.5cm} To meet with the objective of the analysis, ie, from credit providers perspective, to minimize loss they needs a decision rule regarding who to give approval of the loan and who not to. German Credit Classification dataset obtained from the UCI(University of California,Irvine)Machine Learning Repository \cite{[2]}, was used in this study. The number of examples in this dataset is sufficient and its values for each attribute are complete or available. The detailed description of attributes included in Appendix.\par
+The number of examples in the dataset is 1000.The dataset is classified into two classes:good and bad class. The good class has 700 examples whereas the bad one has 300. The dataset has 20 attributes, Seven of the attributes are of continuous(numerical) types, while the other 13 are of categorical types. The summary of data is given below:\\
+
+<<>>=
+dataset<-read.csv("/home/freestyler/BDA_project/Data/german.csv")
+summary(dataset)
+@
+
+The data may not be tidy and we may have to preprocess the data before our analysis can be done. We will discuss how we prepared the data in the following section.\\
+
+\section{Data Preprocessing} 
+%The next step in this study is the statistical analysis of the data.
+%You invested lot of times preparing your data for exploration. Why not you describe what you did and how you did. You may add your R codes so that others know what exactly you did. For example let us view the summary of the data as below.
+%Try to avoid putting raw output like this in your final report. Instead make a clean table as shown in table \ref{summary-data}. If you have to keep some raw output of your analysis please put them in a section called appendix at the end of the document. If you really believe that you have to put them here, you can do that and thats why we have this example here.
+\subsection{Statistical Analysis}
+\subsubsection{Chi squared test} Before recoding categorical to numerical data, we performed chi squared statistics in original dataset. Since the number of attributes in this problem is not very high, it is possible to look into the dependency of the response (Credibility) on each of them individually. The test is applied when you have two categorical variables from a single dataset. It is used to determine whether there is a significant association between the two variables. Here we are analysing the relation between each attribute with the target variable. Chi squared test is applied for all categorical variables, Below code snippet shows result for one attribute :
+
+<<>>=
+library("MASS")
+data<-read.csv("/home/freestyler/BDA_project/Data/german.csv")
+tbl=table(data$check_status,data$credibility)
+tbl
+chisq.test(tbl)
+@
+\par If the chi square value is large, it tells us that there may be something causing a significant change. A significantly large value will allow us to reject the null hypothesis, which is defined as the prediction that there is no interaction between variables . Basically, if there is a big enough difference between the scores, then we can say something significant happened. If the scores are too close, then we have to conclude that they are basically the same. Overall chi squared result is shown in Table [1].
+\begin{table}[t]
+\caption{Chi squared statistics}
+\centering
+\begin{tabular}{c|c|c}
+\toprule
+Attribute name & Chi square value & p- value \\
+\midrule
+check\_status & 123.72 & 2.20E-16 \\
+history & 61.691 & 1.279e-12 \\
+bonds &	36.099	& 0.0000002761\\
+purpose	& 33.356	& 0.0001157\\
+property	& 23.72	 & 2.86E-05\\
+jobex &	18.368	& 0.001045\\
+house	 & 18.2 &	0.0001117\\
+install &	12.839 &	0.001629\\
+s\_status &	9.6052 &	0.02224\\
+guarantor	 & 6.6454 &	0.03606\\
+nri	& 5.8216	& 0.01583\\
+job	 & 1.8852 &	0.5966\\
+ph	& 1.1726	& 0.2789\\
+
+\bottomrule
+\end{tabular}
+\label{tab}
+\end{table}
+
+\subsubsection{T-test: statistical test}A t-test is commonly used to determine whether the mean of a population significantly differs from a specific value or from the mean of another population.  If the calculated t value exceeds we say that the means are significantly different at that level of probability. Statistical significance is determined by the size of the difference between the group averages, the sample size, and the standard deviations of the groups. For practical purposes statistical significance suggests that the two larger populations from which we sample are ``actually`` different. The t-value will be positive if the first mean is larger than the second and negative if it is smaller. T test is applied for interval and normal data \cite{[3]} here, Below code snippet shows result for one attribute :
+<<message=FALSE,warning=FALSE>>=
+dataset <- read.csv("/home/freestyler/BDA_project/Data/german_test.csv")
+library(fBasics, quietly=TRUE)
+locationTest(na.omit(dataset[dataset[["credibility"]] == "1", "duration"]),
+             na.omit(dataset[dataset[["credibility"]] == "2", "duration"]))
+
+@
+Once you compute the t-value you have to look it up in a table of significance to test whether the ratio is large enough to say that the difference between the groups is not likely to have been a chance finding. Overall t-test result(for numerical variables) is shown in Table[2] where mean X is the mean of creditworthy group and mean Y is the mean of non creditworthy group, p-value is associated with t-statistics, and it is the probability of rejecting a true null hypothesis or the probability associated with a false positive. Analysing the below table we found that \textit{liable} and \textit{residence} gives less significance. 
+\begin{table}[t]
+\caption{t test}
+\centering
+\begin{tabular}{c|c|c|c}
+\toprule
+Attribute name & Mean X & Mean Y & p- value \\
+\midrule
+duration & 19.2071 & 24.86 & 2.404e-10 \\
+credit & 2985.4571 & 3938.1267 & 0.00002478\\ 
+age & 36.2243  & 33.9633  & 0.003788\\
+rate & 2.92 & 3.0967 & 0.02034 \\
+nocredit & 1.4243 & 1.3667 & 0.1416\\
+liable & 1.1557 & 1.1533 & 0.924\\
+residence & 2.8429 & 2.85 & 0.925 \\
+
+%TNM\_job	& 103.1401\\
+%age &	97.9012\\
+%TNM\_s\_status	& 89.2951\\
+%TNM\_install	& 89.2527\\
+%TNM\_history	& 87.2464\\
+%TNM\_jobex	& 75.462\\
+%TNM\_house	& 73.4073\\
+%rate	& 69.9141\\
+%residence	& 67.3383\\
+%TNM\_property	& 56.7922\\
+%duration	& 53.9899\\
+%TNM\_check\_status	& 53.7911\\
+%TNM\_ph	& 51.9718\\
+%nocredit	& 47.4668\\
+%TNM\_nri	& 47.0012\\
+%liable	& 46.2794\\
+%TNM\_purpose	& 45.281\\
+%TNM\_guarantor	& 40.3566\\
+%credit	& 36.6441\\
+%TNM\_bonds	& 34.6943\\
+\bottomrule
+\end{tabular}
+\label{tab2}
+\end{table}
+
+\subsubsection{Principal Component Analysis}Principal Components Analysis can provide insights into the importance of variables in explaining the variation found within a dataset. A principal component is a numeric linear combination of the values of other variables in the dataset that captures maximal variation in the data. The approach to derive principal components is to determine the eigenvalues of the covariance matrix\cite{[5]}. The importants of components can be analysed from rattle shown in below figure[1]. From this we can analyse the cumulative proportion of components and we can include the components into our models based on the threshold value we chose.\\
+\begin{figure}[h]
+\begin{center}
+\includegraphics [scale=0.40]{pca.png}
+\end{center}
+\caption{PCA using eigen value}
+\end{figure}
+
+\subsection{Data Transformation}
+\subsubsection{Recoding}\hspace{0.5cm}After examine the whole data, it is found that there is no missing values for all attributes. Out of 20 attributes, Seven of the attributes are of continuous(numerical) types, while the other 13 are of categorical types. Using \textit{rattle} package 13 categorical type attributes Recoded as numeric.
+<<>>=
+dataset <- read.csv("/home/freestyler/BDA_project/Data/german.csv")
+ dataset[["TNM_check_status"]] <- as.numeric( dataset[["check_status"]])
+ dataset[["TNM_history"]] <- as.numeric( dataset[["history"]])
+ dataset[["TNM_purpose"]] <- as.numeric( dataset[["purpose"]])
+ dataset[["TNM_bonds"]] <- as.numeric( dataset[["bonds"]])
+ dataset[["TNM_jobex"]] <- as.numeric( dataset[["jobex"]])
+ dataset[["TNM_s_status"]] <- as.numeric( dataset[["s_status"]])
+ dataset[["TNM_guarantor"]] <- as.numeric( dataset[["guarantor"]])
+ dataset[["TNM_property"]] <- as.numeric( dataset[["property"]])
+ dataset[["TNM_install"]] <- as.numeric( dataset[["install"]])
+ dataset[["TNM_house"]] <- as.numeric( dataset[["house"]])
+ dataset[["TNM_job"]] <- as.numeric( dataset[["job"]])
+ dataset[["TNM_ph"]] <- as.numeric( dataset[["ph"]])
+ dataset[["TNM_nri"]] <- as.numeric( dataset[["nri"]])
+@
+\subsubsection{Rescaling}\hspace{0.5cm}Using \textit{reshape} library the outcome values (1 = Good, 2 = Bad) rescaled to (0 = Good, 1 = Bad).\par
+<<>>=
+library(reshape, quietly=TRUE)
+dataset[["R01_credibility"]] <- dataset[["credibility"]]
+dataset[["R01_credibility"]] <- ( dataset[["credibility"]] - 1.000000)/abs(2.000000 - 1.000000)
+@
+\subsubsection{Over sampling}\hspace{0.5cm}As we know that the dataset is classified into two classes:good and bad class. The good class has 700 examples whereas the bad one has 300.  Learning from data sets that contain very few instances of the minority (or interesting) class usually produces biased classifiers that have a higher predictive accuracy over the majority class(es), but poorer predictive accuracy over the minority class. \par
+<<>>=
+dataset<-read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+df<- data.frame(dataset)
+table(df$R01_credibility)
+@
+\hspace{0.5cm}Using the \textit{unbalanced} package available for R, which implements some of most well-known techniques and propose a racing algorithm to select adaptively the most appropriate strategy for a given unbalanced task. Here we are using \textit{ubOver} \cite{[1]} function for oversampling, the function replicates randomly some instances from the minority class in order to obtain a final dataset with the same number of instances from the two classes.\par
+<<echo=FALSE>>=
+seed <- 40
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.7*nobs) # 700 observations
+validate <- sample(setdiff(seq_len(nrow(dataset)), train), 0.15*nobs) # 150 observations
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate)
+
+xtrain <- dataset[train,]
+xvalid <- dataset[validate,]
+xtest <- dataset[test,]
+
+ytrain <- dataset$R01_credibility[train]
+yvalid <- dataset$R01_credibility[validate]
+ytest <- dataset$R01_credibility[test]
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+weights <- NULL
+@
+
+<<message=FALSE,warning=FALSE>>=
+library(unbalanced)
+n <-ncol(train)
+out <- ytrain
+input <- xtrain
+
+table(ytrain)
+
+outdata<- ubOver(X=input, Y= out)
+@
+
+<<echo=FALSE>>=
+write.csv(outdata$X[,c("duration", "credit", "rate", "residence",
+                     "age", "nocredit", "liable", "TNM_check_status",
+                     "TNM_history", "TNM_purpose", "TNM_bonds", "TNM_jobex",
+                     "TNM_s_status", "TNM_guarantor", "TNM_property", "TNM_install",
+                     "TNM_house", "TNM_job", "TNM_ph", "TNM_nri","R01_credibility")], file="/home/freestyler/BDA_project/Data/overSampled_data.csv",row.names=FALSE)  
+
+@
+
+<<>>=
+train_dataset<-read.csv("/home/freestyler/BDA_project/Data/overSampled_data.csv")
+df<- data.frame(train_dataset)
+table(train_dataset$R01_credibility)
+@
+
+\par\hspace{0.5cm}By analysing the result from above methods, two attributes has been deleted. We assume that the attributes \textit{liable} and \textit{residence} are less significant to contribute for loan sanction. 
+%\subsection{What is funny} This section may not be necessary. But if you notice something  about the data that does not make any sense you can mention them in a section like that. Or if you think of anything interesting about the data, just discuss them here.
+
+\section{Methodology} This section will include the methods we used for our analysis. The techniques we studied for this classification problem are Logistic Regression, Decision Tree, Support Vector Machine, Neural network, Random forest  available with \textit{rattle} package.  Other than that we experimented k nearest neighbour and PCA- Neural network .
+%You should include some theoretical justification here. For example, why you think the method is applicable, what are the assumptions about the methods, whether your data satisfies those assumption or not etc. 
+
+\subsection{Logistic Regression} \hspace{0.9cm}Logistic regression models are quite useful for classifying new cases into one of two outcome categories (``success" or ``failure"). The estimated logistic model, applied to new cases of a test (evaluation) data set, provides predictions of success probabilities. With a certain cutoff on the predicted success probabilities, the logistic regression provides a rule for classifying new cases. One can use the actual realizations of the cases in the test (evaluation) data set to investigate whether the logistic regression (or any other classification method) is in fact capable of identifying the
+actual outcomes. 
+\par \hspace{0.5}The logistic regression model links the predictor variables to probabilities
+through the equation:
+
+\begin{equation} \label{eq:reg}
+ p = f(\alpha + \beta_1 X_1 + \beta_2 X_2 + ....+ \beta_k X_k ) = \frac{exp(\alpha + \beta_1 X_1 + \beta_2 X_2 + ....+ \beta_k X_k )}{1+exp(\alpha + \beta_1 X_1 + \beta_2 X_2 + ....+ \beta_k X_k ) }
+\end{equation}
+% It can be verified that this function leads to S- shaped curves between 0 and 1 such as those shown in the  graph :
+ 
+% \begin{figure}[h]
+%\includegraphics [scale=0.5]{image1.jpg}
+%\caption{S  curve}
+%\end{figure}
+
+We randomly select 800 of the 1000 cases for the training set, and put the remaining 200 cases to the test set .The R program and its output for the model is listed below.
+
+<<message=FALSE,warning=FALSE>>=
+library(rattle)
+dataset<-read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+set.seed(42) 
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+@
+
+<<echo=FALSE>>=
+# The following variable selections have been noted.
+
+input <- c("duration", "credit", "rate", "age",
+               "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+               "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+               "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+               "TNM_ph", "TNM_nri")
+
+numeric <- c("duration", "credit", "rate", "age",
+                 "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+                 "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+                 "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+                 "TNM_ph", "TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("residence", "liable")
+weights <- NULL
+
+@
+\\ The regression model built. The code below estimates a logistic regression model using the glm (generalized linear model) function.
+<<>>=
+glm <- glm(R01_credibility ~ .,
+               data=dataset[train, c(input, target)],
+               family=binomial(link="logit"))
+
+print(summary(glm))
+@
+\\ When developing models for prediction, the most critical metric regards how well the model does in predicting the target variable on out of sample observations. This process involves using the model estimates to predict values on the test set. Afterwards, we compared the predicted target variable versus the observed values for each observation.
+<<message=FALSE,warning=FALSE>>=
+library(ROCR)
+library(ggplot2, quietly=TRUE)
+
+pr <- predict(glm, type="response", newdata=dataset[test, c(input, target)])
+@
+
+<<echo=FALSE>>=
+# Remove observations with missing target.
+no.miss   <- na.omit(dataset[test, c(input, target)]$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+
+pe <- performance(pred, "tpr", "fpr")
+au <- performance(pred, "auc")@y.values[[1]]
+pd <- data.frame(fpr=unlist(pe@x.values), tpr=unlist(pe@y.values))
+@
+
+<<echo=FALSE>>=
+p <- ggplot(pd, aes(x=fpr, y=tpr))
+p <- p + geom_line(colour="red")
+p <- p + xlab("False Positive Rate") + ylab("True Positive Rate")
+p <- p + ggtitle("ROC Curve Linear [test] R01_credibility")
+p <- p + theme(plot.title=element_text(size=10))
+p <- p + geom_line(data=data.frame(), aes(x=c(0,1), y=c(0,1)), colour="grey")
+p <- p + annotate("text", x=0.50, y=0.00, hjust=0, vjust=0, size=5,
+                  label=paste("AUC =", round(au, 2)))
+@
+The ROC curve is plotted Figure [2] and the Area Under Curve obtained is 0.8.\\
+<<fig.height=5, fig.width=8, fig.cap="ROC Curve-Logistic Regression">>=
+plot(p)
+@
+%\begin{figure}[h]
+%\begin{center}
+%\includegraphics [scale=0.75]{Rplot.png}
+%\end{center}
+%\caption{ROC Curve:Logistic Regression}
+%\end{figure}
+\hspace{0cm}The error matrix for the model generated. Below code produce the confusion(error) matrix showing counts.
+<<>>=
+
+pr <- as.vector(ifelse(predict(glm, type="response", 
+                               newdata=dataset[test, c(input, target)]) > 0.5, "1", "0"))
+
+table(dataset[test, c(input, target)]$R01_credibility, pr,
+      dnn=c("Actual", "Predicted"))
+@
+
+<<echo=FALSE>>=
+# Generate the confusion matrix showing proportions.
+
+pcme <- function(actual, cl)
+{
+  x <- table(actual, cl)
+  tbl <- cbind(round(x/length(actual), 2),
+               Error=round(c(x[1,2]/sum(x[1,]),
+                             x[2,1]/sum(x[2,])), 2))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+};
+#pcme(dataset[test, c(input, target)]$R01_credibility, pr)
+
+overall <- function(x)
+{
+  if (nrow(x) == 2) 
+    cat((x[1,2] + x[2,1]) / sum(x)) 
+  else
+    cat(1 - (x[1,rownames(x)]) / sum(x))
+} 
+@
+\hspace{0cm}And the overall error percentage is :\par
+<<>>=
+overall(table(pr, dataset[test, c(input, target)]$R01_credibility,  
+              dnn=c("Predicted", "Actual")))
+@
+
+<<echo=FALSE>>=
+pcme <- function(actual, cl)
+{
+  x <- table(actual, cl)
+  nc <- nrow(x)
+  tbl <- cbind(x/length(actual),
+               Error=sapply(1:nc,
+                 function(r) round(sum(x[r,-r])/sum(x[r,]), 2)))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+}
+@
+The error matrix showing the proportion is :
+<<>>=
+per <- pcme(dataset[test, c(input, target)]$R01_credibility, pr)
+round(per, 2)
+@
+From above error matrix we will get sensitivity and specificity proportion as (1-error) from first row and second row respectively. The plot in Figure [2] gives sensitivity(true positive rate) against specificity(true negative rate) :
+<<echo=FALSE>>=
+library(ROCR)
+
+# Generate Sensitivity/Specificity Plot for glm model on outfile.csv [test].
+
+pr <- predict(glm, type="response", newdata=dataset[test, c(input, target)])
+
+# Remove observations with missing target.
+
+no.miss   <- na.omit(dataset[test, c(input, target)]$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+@
+
+<<fig.height=3, fig.width=5, fig.cap="Sensitivity/Specificity-Logistic Regression">>=
+plot(performance(pred, "sens", "spec"), col="#CC0000FF", lty=1, add=FALSE)
+@
+%\begin{figure}[h]
+%\begin{center}
+%\includegraphics [scale=0.60]{Rplot01.png}
+%\end{center}
+%\caption{sensitivity/specificity plot:Logistic Regression}
+%\end{figure}
+
+Thus the whole performance of Logistic Regression model is analysed by the measures discussed above, and it is giving an accuracy of 79.5\%.\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The k-fold cross validation method involves splitting the dataset into k-subsets. For each subset is held out while the model is trained on all other subsets. This process is completed until accuracy is determine for each instance in the dataset, and an overall accuracy estimate is provided. We observe that we have the same number of examples in each fold. We applied 10-fold cross validation on 1000 samples of the german credit dataset using the package \textit{survival}.
+<<warning=FALSE,message=FALSE>>=
+library(survival)
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+unirand<-runif(n)
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+@
+We can repeat now the learning process and the test process. We collect each value in a vector. Printing each sub-sample's sensitivity ,specificity and accuracy :
+<<message=FALSE,warning=FALSE>>=
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+all.acc1<-numeric(0)
+for(k in 1:K){
+glm <- glm(R01_credibility ~., data = dataset[bloc!=k,], family=binomial(link="logit"))
+pred <- as.vector(ifelse(predict(glm,newdata = dataset[bloc==k,],type = 'response')
+                         > 0.5, "1", "0"))
+#confusion matrix for each partition
+mc<-table(dataset$R01_credibility[bloc==k],pred)
+err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+acc1<-1-(err)
+a<-mc[1,1]
+b<-mc[1,1]+mc[1,2]
+sensitivity<-a/b
+c<-mc[2,2]
+d<-mc[2,2]+mc[2,1]
+specificity<-c/d
+#function combines vector, matrix or data frame by rows.
+all.sense<-rbind(all.sense,sensitivity)
+all.spese<-rbind(all.spese,specificity)
+#all.err <- rbind(all.err,err)
+all.acc1<-rbind(all.acc1,acc1)
+}
+@
+The sensitivity, specificity and accuracy in each fold is listed below
+<<>>=
+print(all.sense)
+print(all.spese)
+#print(all.err)
+print(all.acc1)
+@
+Because we have the same number of examples in each fold, we can compute unweighted mean. This is the average of each sub-sample's sensitivity:
+<<echo=FALSE>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+This is the average of each sub-sample's specificity:
+<<echo=FALSE>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+This is the cross validation accuracy estimation:
+<<echo=FALSE>>=
+#err.cv<-mean(all.err)
+acc1.cv<-mean(all.acc1)
+print(acc1.cv)
+#print(err.cv)
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+%The performance of the logistic regression model for the test data set is as follows: the logistic regression recognizes 131 good as good but 14 good as bad, and predicts 29 bad as good and 26 bad as bad.
+
+%These theories may require you to type mathematical equations and we need to refer them in the text like equation \ref{eq:reg}.
+
+%\begin{equation} \label{eq:reg}
+ %Y = \beta_0 + \beta_1 X + \epsilon
+%\end{equation}
+%where $\epsilon \sim N(0,1)$.
+
+%You should discuss the exploratory steps and the logical conclusion of adopting equation \ref{eq:reg} for fitting to your data. Clearly mention the conditions and the assumptions of the model. Do not write any result of the model in this section. This section is only for theoretical discussion and any results of these models should be discussed in results section.
+
+\subsection{Decision Tree} \hspace{0.9cm} Anything that we can express in terms of only two outcomes can be handled as a binary classification problem. A decision tree model is one of the most common data mining models. It
+is popular because the resulting model is easy to understand. The algorithms use a recursive partitioning approach. The traditional algorithm is implemented in the \textit{rpart} package. It is comparable to CART and ID3/C4.\par
+\hspace{0.5cm}Classification and regression trees are known under their acronym CART. If the response is categorical then it is about classification trees ;If the response is continuous then it is about regression trees . Regression trees try to predict a (numeric) mean response at the leaves of the tree, such as the expected amount of rain in inches, or the expected default rate on loans. Classification trees try to predict the class probabilities at the leaves, such as the probability that there will be rain, the
+preference for one of five different types of movie genres,or here the probability of defaulting on a loan.\par
+\hspace{0.5cm} Tree construction uses a recursive partitioning of the data set; the approach is also referred to as divide-and-conquer partitioning. At each stage, the data set is split into two nonoverlapping, smaller data sets. The objective of a split is to increase the homogeneity of the resulting smaller data sets with respect to the target variable. We continually divide the data set by creating node splits of smaller and smaller data sets\cite{[4]}.\par
+\hspace{0.5cm}We randomly select 800 of the 1000 cases for the training set, and put the remaining 200 cases to the test set like in previous model. The R program and its output for the model is listed below.
+<<echo=FALSE>>==
+library(rattle)
+dataset<-read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+set.seed(42) 
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+
+# The following variable selections have been noted.
+
+input <- c("duration", "credit", "rate", "age",
+               "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+               "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+               "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+               "TNM_ph", "TNM_nri")
+
+numeric <- c("duration", "credit", "rate", "age",
+                 "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+                 "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+                 "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+                 "TNM_ph", "TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("residence", "liable")
+weights <- NULL
+@
+Decision tree model built using \textit{rpart} function.
+<<message=FALSE,warning=FALSE>>=
+library(rpart, quietly=TRUE)
+library(rpart.plot)
+set.seed(42)
+
+rpart <- rpart(R01_credibility ~ .,
+                   data=dataset[train, c(input, target)],
+                   method="class",
+                   parms=list(split="information"),
+                   control=rpart.control(usesurrogate=0, 
+                                         maxsurrogate=0))
+@
+The textual view of the Decision tree is :
+<<echo=FALSE>>=
+print(rpart)
+printcp(rpart)
+cat("\n")
+@
+And the list of the rules obtained from tree is :
+<<>>=
+asRules(rpart)
+@
+The plot of the Decision tree is shown in Figure [4]:
+<<fig.height=4, fig.width=10, fig.cap="Decision Tree Plot">>=
+prp(rpart)
+@
+\textbf{Model Performance :} For evaluating the model performance, we generated confusion matrix for the Decision tree model. First generated the response from the model:
+<<>>=
+pr <- predict(rpart, newdata=dataset[test, c(input, target)], type="class")
+@
+And the confusion matrix showing count is :
+<<>>=
+table(dataset[test, c(input, target)]$R01_credibility, pr,
+      dnn=c("Actual", "Predicted"))
+@
+Confusion matrix showing the proportions:
+<<echo=FALSE>>=
+pcme <- function(actual, cl)
+{
+  x <- table(actual, cl)
+  tbl <- cbind(round(x/length(actual), 2),
+               Error=round(c(x[1,2]/sum(x[1,]),
+                             x[2,1]/sum(x[2,])), 2))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+};
+@
+
+<<>>=
+pcme(dataset[test, c(input, target)]$R01_credibility, pr)
+@
+From above error matrix we will get sensitivity and specificity proportion as (1-error) from first row and second row respectively. The overall error percentage is:
+<<echo=FALSE>>=
+overall <- function(x)
+{
+  if (nrow(x) == 2) 
+    cat((x[1,2] + x[2,1]) / sum(x)) 
+  else
+    cat(1 - (x[1,rownames(x)]) / sum(x))
+} 
+@
+
+<<>>=
+overall(table(pr, dataset[test, c(input, target)]$R01_credibility,  
+              dnn=c("Predicted", "Actual")))
+@
+%<<echo=FALSE>>=
+%avgerr <- function(x) 
+%  cat(mean(c(x[1,2], x[2,1]) / apply(x, 1, sum))) 
+%avgerr(table(pr, dataset[test, c(input, target)]$R01_credibility,  
+%             dnn=c("Predicted", "Actual")))
+%@
+ROC curve for Decision tree model is shown in Figure [5]. The line right on the diagonal serves like a boundary between the good and bad models. The curve approaching to the top left hints a good fitting model.
+<<echo=FALSE>>=
+library(ROCR)
+library(ggplot2, quietly=TRUE)
+pr <- predict(rpart, newdata=dataset[test, c(input, target)])[,2]
+
+no.miss   <- na.omit(dataset[test, c(input, target)]$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+
+pe <- performance(pred, "tpr", "fpr")
+au <- performance(pred, "auc")@y.values[[1]]
+pd <- data.frame(fpr=unlist(pe@x.values), tpr=unlist(pe@y.values))
+p <- ggplot(pd, aes(x=fpr, y=tpr))
+p <- p + geom_line(colour="red")
+p <- p + xlab("False Positive Rate") + ylab("True Positive Rate")
+p <- p + ggtitle("ROC Curve Decision Tree outfile.csv [test] R01_credibility")
+p <- p + theme(plot.title=element_text(size=10))
+p <- p + geom_line(data=data.frame(), aes(x=c(0,1), y=c(0,1)), colour="grey")
+p <- p + annotate("text", x=0.50, y=0.00, hjust=0, vjust=0, size=5,
+                  label=paste("AUC =", round(au, 2)))
+@
+
+<<fig.height=4, fig.width=8, fig.cap="ROC Curve-Decision Tree">>=
+print(p)
+@
+And the specificity/sensitivity plot is shown in Figure [6].
+<<echo=FALSE>>=
+no.miss   <- na.omit(dataset[test, c(input, target)]$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+#performance(pred, "auc")
+
+library(ROCR)
+pr <- predict(rpart, newdata=dataset[test, c(input, target)])[,2]
+no.miss   <- na.omit(dataset[test, c(input, target)]$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+@
+
+<<fig.height=4, fig.width=8, fig.cap="Decision Tree - Sensitivity/Specificity Plot">>=
+plot(performance(pred, "sens", "spec"), col="#CC0000FF", lty=1, add=FALSE)
+@
+Thus the overall performance of Decision tree is analysed from above discussed measures. It is giving an accuracy of 78\%.\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Cross validation is a resampling approach which enables to obtain a more honest error rate estimate or average accuracy of the tree computed on the whole dataset. The cross validation consists to randomly split the data in K folds. We reiterate the following process, by turning the sub-samples: learning the model on (K-1) folds, computing performance measures on the fold number K. We observe that we have the same number of examples in each fold. We applied 10-fold cross validation on 1000 samples of the german credit dataset.
+<<message=FALSE,warning=FALSE>>=
+library(rpart)
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+#The runif() function can be used to simulate n independent uniform random variables.
+unirand<-runif(n)
+#rank returns the lowest order of position, returns the sample ranks of the values in a vector.
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+@
+We can repeat now the learning process and the test process. We collect each error rate,sensitivity, specificity in a vector.Printing Each sub-sample's of sensitivity ,specificity and accuracy:
+<<echo=FALSE>>=
+all.err<- numeric(0)
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+all.acc1<-numeric(0)
+for(k in 1:K){
+arbre <- rpart(R01_credibility ~., data = dataset[bloc!=k,], method = "class")
+pred <- predict(arbre,newdata = dataset[bloc==k,],type = "class")
+#confusion matrix for each partition
+mc<-table(dataset$R01_credibility[bloc==k],pred)
+err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+acc1<-1-(err)
+a<-mc[1,1]
+b<-mc[1,1]+mc[1,2]
+sensitivity<-a/b
+c<-mc[2,2]
+d<-mc[2,2]+mc[2,1]
+specificity<-c/d
+#function combines vector, matrix or data frame by rows.
+all.sense<-rbind(all.sense,sensitivity)
+all.spese<-rbind(all.spese,specificity)
+all.acc1<-rbind(all.acc1,acc1)
+
+}
+print(all.sense)
+print(all.spese)
+print(all.acc1)
+@
+Because we have the same number of examples in each fold, we can compute unweighted mean. This is the average of each sub-sample's sensitivity:
+<<echo=FALSE>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+This is the average of each sub-sample's specificity:
+<<echo=FALSE>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+This is the cross validation accuracy estimation:
+<<echo=FALSE>>=
+acc1.cv<-mean(all.acc1)
+print(acc1.cv)
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\subsection{Support Vector Machine}\hspace{0.9cm} Support Vector Machines are an excellent tool for classification. The goal of a support vector machine is to find  the optimal separating hyperplane which maximizes the margin of the training data. SVM is a classification algorithm, this will use to predict if something belongs to a particular class or not. Support Vector Machines was worked out for linear two-class classification with margin, where margin means the minimal distance from the separating hyperplane to the closest data points. SVM learning machine seeks for an optimal separating hyperplane, where the margin is maximal. An important and unique feature of this approach is that the solution is based only on those data points, which are at the margin. These points are called support vectors. For instance in Figure [7] we can see that there exists multiple lines that offer a solution to the problem. A line is bad if it passes too close to the points because it will be noise sensitive and it will not generalize correctly. The operation of the SVM algorithm is based on finding the hyperplane that gives the largest minimum distance to the training examples.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics [scale=0.75]{svm.JPG}
+\end{center}
+\caption{Linearly separable set of 2D-points which belong to one of two classes}
+\end{figure}
+
+Notation of hyperplane is:
+
+\hspace{5cm}\begin{equation} \label{eq:hyper_plane}
+f(x)= \beta_0 + \beta^T X.
+\end{equation}
+
+where $\beta$ is known as the weight vector and $\beta_{0}$ as the bias.
+
+The optimal hyperplane can be represented in an infinite number of different
+ways by scaling of $\beta$ and $\beta_{0}$. As a matter of convention, among all the
+possible representations of the hyperplane, the one chosen is:
+
+
+\hspace{5cm}\begin{equation} \label{eq:hyperplane}
+|\beta_0 + \beta^T X|=1.
+\end{equation}
+
+\par Where x symbolizes the training examples closest to the hyperplane.Geometry that gives the distance between a point x and a hyperplane ($\beta$, $\beta_{0}$):
+
+\hspace{5cm}
+\begin{equation} \label{eq:dist}
+distance = \frac{\beta_0 + \beta^T X|}{||\beta||}
+\end{equation}
+
+\par Training set that is closest to the hyperplane is called support vectors. This representation is known as the canonical hyperplane.For the canonical hyperplane, the numerator is equal to one and the distance to the support vectors is:
+\hspace{5cm}
+\begin{equation} \label{eq:distsv}
+distance_{support vectors}=\frac{\beta_0 + \beta^T X|}{||\beta||} = \frac{1}{||\beta||}.
+\end{equation}
+
+\par Margin M, is twice the distance to the closest examples:
+\hspace{5cm} 
+\begin{equation} \label{eq:margin}
+M= \frac{2}{||\beta||}
+\end{equation}
+
+The problem of maximizing M is equivalent to the problem of minimizing a 
+function L($\beta$) subject to some constraints. The constraints model the 
+requirement for the hyperplane to classify correctly all the training examples x_{i}.
+
+\hspace{5cm}
+\begin{equation} \label{eq:sample}
+min_{\beta,\beta_0}L(\beta) = \frac{1}{2} || \beta^2 ||  (\beta^Tx_i + \beta_0)>=1\forall_i.
+\end{equation}
+
+So as mentioned earlier the objective is to find the classifier with the best margin of separation. SVM can be implemented with R using the command ksvm() in the R package \textit{kernlab}.
+<<echo=FALSE>>=
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+set.seed(41) 
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+
+# The following variable selections have been noted.
+
+input <- c("duration", "credit", "rate", "age",
+               "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+               "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+               "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+               "TNM_ph", "TNM_nri")
+
+numeric <- c("duration", "credit", "rate", "age",
+                 "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+                 "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+                 "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+                 "TNM_ph", "TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("residence", "liable")
+weights <- NULL
+@
+<<message=FALSE,warning=FALSE>>=
+library(kernlab, quietly=TRUE)
+ksvm <- ksvm(as.factor(R01_credibility) ~ .,
+                 data=dataset[train,c(input, target)],
+                 kernel="rbfdot",
+                 prob.model=TRUE)
+@
+<<>>=
+ksvm
+@
+Then using predict function and test data generate the predicted values. ROC Curve for this model is shown in Figure [8].
+<<message=FALSE,warning=FALSE>>=
+library(ROCR)
+library(ggplot2, quietly=TRUE)
+pr <- predict(ksvm, newdata=na.omit(dataset[test, c(input, target)]), 
+            type="probabilities")[,2]
+@
+<<echo=FALSE,message=FALSE,warning=FALSE>>=
+no.miss   <- na.omit(na.omit(dataset[test, c(input, target)])$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+
+pe <- performance(pred, "tpr", "fpr")
+au <- performance(pred, "auc")@y.values[[1]]
+pd <- data.frame(fpr=unlist(pe@x.values), tpr=unlist(pe@y.values))
+p <- ggplot(pd, aes(x=fpr, y=tpr))
+p <- p + geom_line(colour="red")
+p <- p + xlab("False Positive Rate") + ylab("True Positive Rate")
+p <- p + ggtitle("ROC Curve SVM [test] R01_credibility")
+p <- p + theme(plot.title=element_text(size=10))
+p <- p + geom_line(data=data.frame(), aes(x=c(0,1), y=c(0,1)), colour="grey")
+p <- p + annotate("text", x=0.50, y=0.00, hjust=0, vjust=0, size=5,
+                  label=paste("AUC =", round(au, 2)))
+@
+<<fig.height=4, fig.width=8, fig.cap="ROC Curve - Support Vector Machine">>=
+print(p)
+@
+The confusion matrix showing the counts and error proportion is given below:
+<<>>=
+pr <- predict(ksvm, newdata=na.omit(dataset[test, c(input, target)]))
+table(dataset[test, c(input, target)]$R01_credibility, pr,
+      dnn=c("Actual", "Predicted"))
+@
+
+<<echo=FALSE>>=
+pcme <- function(actual, cl)
+{
+  x <- table(actual, cl)
+  tbl <- cbind(round(x/length(actual), 2),
+               Error=round(c(x[1,2]/sum(x[1,]),
+                             x[2,1]/sum(x[2,])), 2))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+};
+pcme(dataset[test, c(input, target)]$R01_credibility, pr)
+@
+Thus the Support vector machine model giving an accuracy of 79.5\%, sensitivity proportion 0.9 but specificity proportion 0.5 only.\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We observe that we have the same number of examples in each fold like in previous models we are applying 10 fold cross validation. We can repeat now the learning process and the test process. We collect each measure in a vector.
+<<echo=FALSE,warning=FALSE,results='hide',message=FALSE>>=
+library(kernlab, quietly=TRUE)
+library(e1071)
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+#The runif() function can be used to simulate n independent uniform random variables.
+unirand<-runif(n)
+#rank returns the lowest order of position, returns the sample ranks of the values in a vector.
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+@
+
+<<echo=FALSE>>=
+#all.err<- numeric(0)
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+all.acc1<-numeric(0)
+@
+
+<<>>=
+for(k in 1:K){
+ksvm1 <- ksvm(as.factor(R01_credibility) ~., data = dataset[bloc!=k,],probability=TRUE)
+pred <- predict(ksvm1,newdata = na.omit(dataset[bloc==k,]))
+#confusion matrix for each partition
+mc<-table(dataset$R01_credibility[bloc==k],pred)
+err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+acc1<-1-(err)
+a<-mc[1,1]
+b<-mc[1,1]+mc[1,2]
+sensitivity<-a/b
+c<-mc[2,2]
+d<-mc[2,2]+mc[2,1]
+specificity<-c/d
+all.sense<-rbind(all.sense,sensitivity)
+all.spese<-rbind(all.spese,specificity)
+all.acc1<-rbind(all.acc1,acc1)
+}
+@
+
+<<echo=FALSE>>=
+print(all.sense)
+print(all.spese)
+#print(all.err)
+print(all.acc1)
+@
+Because we have the same number of examples in each fold, we can compute unweighted mean. This is the average of each sub-sample's sensitivity:
+<<echo=FALSE>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+This is the average of each sub-sample's specificity:
+<<echo=FALSE>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+This is the cross validation accuracy estimation:
+<<echo=FALSE>>=
+#err.cv<-mean(all.err)
+acc1.cv<-mean(all.acc1)
+print(acc1.cv)
+#print(err.cv)
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\subsection{Neural Network}\hspace{0.9cm}Neural networks comprise yet another group of nonlinear procedures for prediction and classification. Neural networks are computational analogs of the processes that describe the working of neurons. Neural nets consist of connected input and output layers, each containing numerous units, where the connections among the units of the layers have weights associated with them. A multilayer neural network consists of an input layer of distinct units (usually input units represent the attributes of the case that needs to be classified), one or more hidden layers, and an output layer with several units that represent the class that needs to be predicted. Each layer is made up of several units. The inputs from the units of the first layer are weighted and fed simultaneously to a second layer of neuron-like units, known as the hidden layer. Each of its units takes as its input a weighted sum of the outputs
+of the previous layer and applies a nonlinear activation function to determine its output. The activation function is usually a logistic function that transforms the output to a number that is between 0 and 1; for this reason, it is often referred to as the squashing function. The output units may already be the actual output of the system (in which case we talk about a single hidden layer), or the outputs of the
+first hidden layer can be fed as inputs to another hidden layer (in which case we have two hidden layers), and so on if additional hidden layers are involved.\par
+\hspace{0.5cm} One needs to decide on the number of hidden layers and the number of units in the various layers, as well as the weights that connect the inputs and outputs of these layers. Neural nets are very general, and because of the nonlinear activation functions neural nets are able to approximate most nonlinear functional relationships very well. Of course, the weights in these systems have to be estimated by training the system on actual data. The iterative method of back-propagation can be used to determine the empirical weights that lead to the best fit on a given training sample. For that, one needs to specify a learning parameter that controls the speed of convergence of this iterative estimation method.\par
+\hspace{0.5cm} One disadvantage of neural nets is that the approximating models relating inputs and outputs are purely "black box'' models, and they provide very little insight into what these models really do. Also, the user of neural nets must make many modeling assumptions, such as the number of hidden layers and the number of units in each hidden layer, and usually there is little guidance on how to do this. It takes considerable experience to find the most appropriate representation. The package \textit{nnet} is used here\cite{[7]}.\par
+<<echo=FALSE,warning=FALSE,message=FALSE>>=
+library(rattle)
+library(magrittr)
+building <- TRUE
+scoring  <- ! building
+
+crv$seed <- 42 
+dataset <- read.csv("/home/freestyler/outfile_saved.csv", na.strings=c(".", "NA", "", "?"), strip.white=TRUE, encoding="UTF-8")
+set.seed(crv$seed) 
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+
+# The following variable selections have been noted.
+
+input <- c("RRC_duration", "RRC_credit", "RRC_rate", "RRC_age",
+               "RRC_nocredit", "RRC_TNM_check_status", "RRC_TNM_history", "RRC_TNM_purpose",
+               "RRC_TNM_bonds", "RRC_TNM_jobex", "RRC_TNM_s_status", "RRC_TNM_guarantor",
+               "RRC_TNM_property", "RRC_TNM_install", "RRC_TNM_house", "RRC_TNM_job",
+               "RRC_TNM_ph", "RRC_TNM_nri")
+
+numeric <- c("RRC_duration", "RRC_credit", "RRC_rate", "RRC_age",
+                 "RRC_nocredit", "RRC_TNM_check_status", "RRC_TNM_history", "RRC_TNM_purpose",
+                 "RRC_TNM_bonds", "RRC_TNM_jobex", "RRC_TNM_s_status", "RRC_TNM_guarantor",
+                 "RRC_TNM_property", "RRC_TNM_install", "RRC_TNM_house", "RRC_TNM_job",
+                 "RRC_TNM_ph", "RRC_TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("RRC_residence", "RRC_liable")
+weights <- NULL
+
+@
+The Neural network model using nnet package is build:
+<<message=FALSE,warning=FALSE>>=
+library(nnet, quietly=TRUE)
+
+set.seed(199)
+nnet <- nnet(as.factor(R01_credibility) ~ .,
+                 data=dataset[sample,c(input, target)],
+                 size=7, skip=TRUE, MaxNWts=10000, trace=FALSE, maxit=100)
+@
+The result of the modelling is :
+<<echo=FALSE>>=
+cat(sprintf("A %s network with %d weights.\n",
+            paste(nnet$n, collapse="-"),
+            length(nnet$wts)))
+#cat(sprintf("Inputs: %s.\n",
+#            paste(nnet$coefnames, collapse=", ")))
+cat(sprintf("Output: %s.\n",
+            names(attr(nnet$terms, "dataClasses"))[1]))
+cat(sprintf("Sum of Squares Residuals: %.4f.\n",
+            sum(residuals(nnet) ^ 2)))
+
+@
+<<>>=
+print(summary(nnet))
+@
+Now evaluating the model performance. At first take the response from the model then generate the Confusion matrix for the Neural Network model.
+<<>>=
+pr <- predict(nnet, newdata=dataset[test, c(input, target)], type="class")
+table(dataset[test, c(input, target)]$R01_credibility, pr,
+      dnn=c("Actual", "Predicted"))
+@
+<<echo=FALSE>>=
+pcme <- function(actual, cl)
+{
+  x <- table(actual, cl)
+  nc <- nrow(x)
+  tbl <- cbind(x/length(actual),
+               Error=sapply(1:nc,
+                            function(r) round(sum(x[r,-r])/sum(x[r,]), 2)))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+}
+@
+<<>>=
+per <- pcme(dataset[test, c(input, target)]$R01_credibility, pr)
+round(per, 2)
+@
+The ROC curve generated for the model is in Figure [9].
+<<echo=FALSE>>=
+library(ROCR)
+library(ggplot2, quietly=TRUE)
+pr <- predict(nnet, newdata=dataset[test, c(input, target)])
+no.miss   <- na.omit(dataset[test, c(input, target)]$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+
+pe <- performance(pred, "tpr", "fpr")
+au <- performance(pred, "auc")@y.values[[1]]
+pd <- data.frame(fpr=unlist(pe@x.values), tpr=unlist(pe@y.values))
+p <- ggplot(pd, aes(x=fpr, y=tpr))
+p <- p + geom_line(colour="red")
+p <- p + xlab("False Positive Rate") + ylab("True Positive Rate")
+p <- p + ggtitle("ROC Curve Neural Net")
+p <- p + theme(plot.title=element_text(size=10))
+p <- p + geom_line(data=data.frame(), aes(x=c(0,1), y=c(0,1)), colour="grey")
+p <- p + annotate("text", x=0.50, y=0.00, hjust=0, vjust=0, size=5,
+                  label=paste("AUC =", round(au, 2)))
+@
+
+<<fig.height=4, fig.width=8, fig.cap="ROC Curve - Neural Networks">>=
+print(p)
+@
+The model was giving an accuracy percentage of 69 only.\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The 10 fold cross validation with this model results:
+<<echo=FALSE,message=FALSE,warning=FALSE>>=
+library(rpart)
+library(rattle)
+library(magrittr)
+library(nnet, quietly=TRUE)
+building <- TRUE
+scoring  <- ! building
+dataset <- read.csv("/home/freestyler/outfile_saved.csv", na.strings=c(".", "NA", "", "?"), strip.white=TRUE, encoding="UTF-8")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+#The runif() function can be used to simulate n independent uniform random variables.
+unirand<-runif(n)
+#rank returns the lowest order of position, returns the sample ranks of the values in a vector.
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+@
+Repeating the learning process and the test process. Then collect each sensitivity,specificity, and accuracy in a vector. Printing each sub-sample's sensitivity, specificity and accuracy:
+<<echo=FALSE,warning=FALSE,message=FALSE>>=
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+all.acc1<-numeric(0)
+for(k in 1:K){
+nnetw <- nnet(as.factor(R01_credibility) ~ .,data = dataset[bloc!=k,],size=7, skip=TRUE, MaxNWts=10000, trace=FALSE, maxit=100)
+pred <- predict(nnetw, newdata=dataset[bloc==k,],type = "class")
+#confusion matrix for each partition
+mc<-table(dataset$R01_credibility[bloc==k],pred)
+err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+acc1<-1-(err)
+a<-mc[1,1]
+b<-mc[1,1]+mc[1,2]
+sensitivity<-a/b
+c<-mc[2,2]
+d<-mc[2,2]+mc[2,1]
+specificity<-c/d
+#function combines vector, matrix or data frame by rows.
+all.sense<-rbind(all.sense,sensitivity)
+all.spese<-rbind(all.spese,specificity)
+#all.err <- rbind(all.err,err)
+all.acc1<-rbind(all.acc1,acc1)
+}
+print(all.sense)
+print(all.spese)
+#print(all.err)
+print(all.acc1)
+@
+Because we have the same number of examples in each fold, we can compute unweighted mean. This is the average of each sub-sample's sensitivity:
+<<echo=FALSE>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+This is the average of each sub-sample's specificity:
+<<echo=FALSE>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+This is the cross validation average accuracy:
+<<echo=FALSE>>=
+#err.cv<-mean(all.err)
+acc1.cv<-mean(all.acc1)
+print(acc1.cv)
+#print(err.cv)
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{PCA with Neural network} In this model we are doing PCA in the dataset and use it in the neural network model. For that purpose library \textit{caret} we are using.\par\\ 
+
+<<echo=FALSE,warning=FALSE,message=FALSE>>=
+library(rattle)
+
+# This log generally records the process of building a model. However, with very 
+# little effort the log can be used to score a new dataset. The logical variable 
+# 'building' is used to toggle between generating transformations, as when building 
+# a model, and simply using the transformations, as when scoring a dataset.
+
+building <- TRUE
+scoring  <- ! building
+
+
+# A pre-defined value is used to reset the random seed so that results are repeatable.
+
+crv$seed <- 42 
+
+#============================================================
+# Rattle timestamp: 2015-10-11 17:01:09 x86_64-pc-linux-gnu 
+
+# Load the data.
+@
+<<>>=
+dataset <- read.csv("/home/freestyler/outfile.csv", na.strings=c(".", "NA", "", "?"), strip.white=TRUE, encoding="UTF-8")
+@
+
+<<>>=
+set.seed(crv$seed) 
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.7*nobs) # 700 observations
+validate <- sample(setdiff(seq_len(nrow(dataset)), train), 0.15*nobs) # 150 observations
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 150 observations
+@
+
+<<>>=
+set.seed(42)
+nobs <- nrow(dataset) # 1000 observations
+train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+@
+
+<<echo=FALSE>>=
+input <- c("RRC_duration", "RRC_credit", "RRC_rate", "RRC_residence",
+           "RRC_age", "RRC_nocredit", "RRC_liable", "RRC_TNM_check_status",
+           "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+           "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+           "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+numeric <- c("RRC_duration", "RRC_credit", "RRC_rate", "RRC_residence",
+             "RRC_age", "RRC_nocredit", "RRC_liable", "RRC_TNM_check_status",
+             "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+             "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+             "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- NULL
+weights <- NULL
+@
+
+<<>>=
+xtrain <- dataset[train,]
+xnew <- dataset[-train,]
+ytrain <- dataset$R01_credibility[train]
+ynew <- dataset$R01_credibility[-train]
+@
+\hspace{0.5cm} The function first will run principal component analysis on the data. The cumulative percentage of variance is computed for each principal component. The function uses the thresh argument to determine how many components must be retained to capture this amount of variance in the predictors. Here we used threshold value as 0.95, the model description is given below.\\
+<<message=FALSE,warning=FALSE>>=
+library(caret)
+modelFit <- pcaNNet(xtrain[, 1:20], ytrain, thresh=0.95,size = 5, linout = TRUE, trace = FALSE)
+modelFit
+@
+\hspace{0.5cm}The principal components are then used in a neural network model. When predicting samples, the new data are similarly transformed using the information from the PCA analysis on the training data and then predicted\cite{[8]}.
+<<>>=
+pr<-predict(modelFit, xnew[, 1:20])
+@
+
+<<echo=FALSE>>=
+for(i in 1:length(pr)){
+  if(pr[i]>0.49)
+    pr[i]=1
+  else
+    pr[i]=0
+#print(pr[i])
+}
+@
+
+<<>>=
+table(ynew, pr,dnn=c("Actual", "Predicted"))
+@
+From the confusion matrix generated above we can conclude that with PCA -neural network model also not giving better performance, so we are ignoring this model.
+\subsection{k Nearest Neighbour}\hspace{0.9cm} One useful method for making the classification relies on the k -nearest neighbor algorithm. The k -nearest neighbor (knn) algorithm classifies new objects according to the outcome of the closest object or the outcomes of several closest objects in the feature space of the training set. The k -nearest neighbor algorithm is among the simplest of all machine learning algorithms: an object is classified by a majority vote of its neighbors, with the new object being assigned to the class that is most common among its k nearest neighbors (k is a positive integer, and typically small) \cite{[4]}.\par
+\hspace{0.5cm} The neighbors are taken from a set of objects for which the correct classification
+is known. This can be thought of as the training set for the algorithm, although no explicit training step is required. The training samples are vectors in a multi-dimensional feature space, each with a specified class label. The training phase of the algorithm only consists of storing the feature vectors and class labels of the training samples. In the classification phase, k is a user-defined constant, and a new object with given features (sometimes also referred to as a query or test point) is classified by assigning to it the label that is most frequent among the k training samples nearest to that new object.\par
+\hspace{0.5cm}Usually, with continuous features (such as income in multiples of 1000, or age
+in years), the Euclidean distance is used as the distance metric. Assume that the 'd' features for case 1 are given by 
+\begin{equation}x_{11}, x_{12} , . . . , x_{1d}\end{equation} and that the features for case 2 are given by \begin{equation}x_{21}, x_{22} , . . . , x_{2d}\end{equation}. Then the Euclidean distance between cases 1 and 2 is defined as \begin{equation}\sqrt{(x_{11} - x_{21})^2 + (x_{12} - x_{22})^2 + ..... + (x_{1d} - x_{2d})^2}\end{equation}. If there is only one feature, the Euclidean distance is the absolute value of the difference. It is usually recommended to standardize the feature variables if their units are quite different. Otherwise, more weight would be given to feature variables with larger units. For \textbf{standardization} we converted the data set to a new one with mean zero and standard deviation (stdev) one using \textit{rattle} Type: Rescale, Normalize: Recenter from Transform option. \par
+\hspace{0.5cm}A drawback of the basic ``majority voting" classification of the k -nearest neighbor algorithm is that classes with more frequent outcomes tend to dominate the classification of the new object. Because of their large numbers, they tend to show up more often among the k -nearest neighbors when neighbors are computed. So here we are doing oversampling as mentioned in data preprocessing part in training data and then applying algorithm.
+<<echo=FALSE>>=
+library(rattle)
+building <- TRUE
+scoring  <- ! building
+crv$seed <- 42 
+dataset <- read.csv("/home/freestyler/outfile_saved.csv", na.strings=c(".", "NA", "", "?"), strip.white=TRUE, encoding="UTF-8")
+set.seed(42)
+nobs <- nrow(dataset) # 1000 observations
+train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+# The following variable selections have been noted.
+
+input <- c("RRC_duration", "RRC_credit", "RRC_rate", "RRC_residence",
+           "RRC_age", "RRC_nocredit", "RRC_liable", "RRC_TNM_check_status",
+           "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+           "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+           "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+numeric <- c("RRC_duration", "RRC_credit", "RRC_rate", "RRC_residence",
+             "RRC_age", "RRC_nocredit", "RRC_liable", "RRC_TNM_check_status",
+             "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+             "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+             "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- NULL
+weights <- NULL
+@
+<<>>=
+set.seed(42)
+nobs <- nrow(dataset) # 1000 observations
+train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+@
+<<echo=FALSE>>=
+input <- c("RRC_duration", "RRC_credit", "RRC_rate", 
+           "RRC_age", "RRC_nocredit", "RRC_TNM_check_status",
+           "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+           "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+           "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+numeric <- c("RRC_duration", "RRC_credit", "RRC_rate",
+             "RRC_age", "RRC_nocredit", "RRC_TNM_check_status",
+             "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+             "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+             "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("RRC_residence","RRC_liable")
+weights <- NULL
+@
+<<>>=
+xtrain <- dataset[train,]
+xnew <- dataset[-train,]
+ytrain <- dataset$R01_credibility[train]
+ynew <- dataset$R01_credibility[-train]
+
+train_dataset<-read.csv("/home/freestyler/new_sample.csv")
+@
+<<echo=FALSE>>=
+input <- c("RRC_duration", "RRC_credit", "RRC_rate", 
+           "RRC_age", "RRC_nocredit", "RRC_TNM_check_status",
+           "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+           "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+           "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+numeric <- c("RRC_duration", "RRC_credit", "RRC_rate",
+             "RRC_age", "RRC_nocredit", "RRC_TNM_check_status",
+             "RRC_TNM_history", "RRC_TNM_purpose", "RRC_TNM_bonds", "RRC_TNM_jobex",
+             "RRC_TNM_s_status", "RRC_TNM_guarantor", "RRC_TNM_property", "RRC_TNM_install",
+             "RRC_TNM_house", "RRC_TNM_job", "RRC_TNM_ph", "RRC_TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("RRC_residence","RRC_liable")
+weights <- NULL
+@
+<<>>=
+xtrain <- train_dataset
+ytrain <- train_dataset$R01_credibility
+
+table(ytrain)#Proportion of classes in training set
+table(ynew)#proportion of classes in test set
+@
+k nearest neighbour algorithm applied, after analysing with some values of k, we are getting better solution for k=7. The confusion matrix showing the counts are:
+<<message=FALSE,warning=FALSE>>=
+library(class)
+nearest3 <- knn(train=xtrain, test=xnew, cl=ytrain, k=7)
+
+table(dataset[test, c(input, target)]$R01_credibility, nearest3,
+      dnn=c("Actual", "Predicted"))
+@
+The erro proportion matrix is:
+<<echo=FALSE>>=
+pcme <- function(ynew, nearest3)
+{
+  x <- table(ynew, nearest3)
+  tbl <- cbind(round(x/length(ynew), 2),
+               Error=round(c(x[1,2]/sum(x[1,]),
+                             x[2,1]/sum(x[2,])), 2))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+};
+@
+<<>>=
+pcme(na.omit(dataset[test, c(input, target)])$R01_credibility, nearest3)
+@
+An ROC (receiver operator characteristic) curve shown in Figure [10] compares the false positive rate to the true positive rate. We can access the trade off the number of observations that are incorrectly classified as positives against the number of observations that are correctly classified as positives.
+<<echo=FALSE,message=FALSE,warning=FALSE>>=
+library(ROCR)
+library(ggplot2, quietly=TRUE)
+nearest3 <-as.vector(nearest3,"numeric")
+#nearest1 <-as.vector(nearest1,"numeric")
+ynew <- as.vector(ynew, mode = "numeric")
+
+pred_knn <- prediction(nearest3, ynew)
+
+pe <- performance(pred_knn, "tpr", "fpr")
+au <- performance(pred_knn, "auc")@y.values[[1]]
+pd <- data.frame(fpr=unlist(pe@x.values), tpr=unlist(pe@y.values))
+p <- ggplot(pd, aes(x=fpr, y=tpr))
+p <- p + geom_line(colour="red")
+p <- p + xlab("False Positive Rate") + ylab("True Positive Rate")
+p <- p + ggtitle("ROC Curve K Nearest Neighbour ")
+p <- p + theme(plot.title=element_text(size=10))
+p <- p + geom_line(data=data.frame(), aes(x=c(0,1), y=c(0,1)), colour="grey")
+p <- p + annotate("text", x=0.50, y=0.00, hjust=0, vjust=0, size=5,
+                  label=paste("AUC =", round(au, 2)))
+@
+<<fig.height=4, fig.width=8, fig.cap="ROC Curve - K Nearest Neighbour">>=
+print(p)
+@
+The Proportion of correct classification is:
+<<echo=FALSE>>=
+library(class)
+nearest3 <- knn(train=xtrain, test=xnew, cl=ytrain, k=7)
+@
+<<>>=
+pcorrn3=100*sum(ynew==nearest3)/100
+pcorrn3
+@
+We are applying Leave one out cross validation method here and the average accuracy obtained is 80.91\%:
+<<>>=
+psum<- 0
+pcorr=dim(15)
+for (k in 1:15) {
+  pred=knn.cv(dataset,cl=dataset$R01_credibility,k)
+  pcorr[k]=100*sum(dataset$R01_credibility==pred)/1000
+  psum<- psum+pcorr[k]
+}
+pcorr
+psum/15
+@
+Thus all the above mentioned measures help to analyse the model well, and it was giving an accuracy of 78 \%, with specificity proportion of 0.67 and sensitivity of 0.82.\\
+10 fold cross validation also applied in this model, each sub-sample's sensitivity ,specificity and accuracy is computed:
+<<message=FALSE,echo=FALSE,warning=FALSE>>=
+library(rpart)
+dataset <- read.csv("/home/freestyler/outfile_saved.csv")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+#The runif() function can be used to simulate n independent uniform random variables.
+unirand<-runif(n)
+#rank returns the lowest order of position, returns the sample ranks of the values in a vector.
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+
+all.err<- numeric(0)
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+all.acc1<-numeric(0)
+for(k in 1:K){
+  xtrain<-dataset[bloc!=k,]
+  xnew<-dataset[bloc==k,]
+  ytrain<-dataset$R01_credibility[bloc!=k]
+  nearest <- knn(train=xtrain, test=xnew, cl=ytrain, k=7)
+  #pred <- knn.predict(nearest,newdata = dataset[bloc==k,],type = "class")
+  #confusion matrix for each partition
+  mc<-table(dataset$R01_credibility[bloc==k],nearest)
+  err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+  acc1<-1-(err)
+  a<-mc[1,1]
+  b<-mc[1,1]+mc[1,2]
+  sensitivity<-a/b
+  c<-mc[2,2]
+  d<-mc[2,2]+mc[2,1]
+  specificity<-c/d
+  #function combines vector, matrix or data frame by rows.
+  all.sense<-rbind(all.sense,sensitivity)
+  all.spese<-rbind(all.spese,specificity)
+  #all.err <- rbind(all.err,err)
+  all.acc1<-rbind(all.acc1,acc1)
+}
+print(all.sense)
+print(all.spese)
+#print(all.err)
+print(all.acc1)
+@
+The average sensitivity is:
+<<>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+The average specificity is :
+<<>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+And the average accuracy using 10 fold cross validation is :
+<<>>=
+acc1.cv<-mean(all.acc1)
+print(acc1.cv)
+@
+
+\subsection{Random Forest}\hspace{0.9cm} A random forest is an ensemble (i.e., a collection) of un-pruned
+decision trees. Ensemble models are often robust to variance and bias. Random forests are often used when we have large training datasets and particularly a very large number of input variables (hundreds or even
+thousands of input variables). The algorithm is efficient with respect to a large number of variables since it repeatedly subsets the variables available. We can make use of this model to view the relative importance of each variable also. A random forest model is typically made up of tens or hundreds of decision trees \cite{[5]}.\par
+<<echo=FALSE>>=
+library(rattle)
+building <- TRUE
+scoring  <- ! building
+crv$seed <- 42 
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv", na.strings=c(".", "NA", "", "?"), strip.white=TRUE, encoding="UTF-8")
+set.seed(crv$seed) 
+nobs <- nrow(dataset) # 1000 observations 
+sample <- train <- sample(nrow(dataset), 0.8*nobs) # 800 observations
+validate <- NULL
+test <- setdiff(setdiff(seq_len(nrow(dataset)), train), validate) # 200 observations
+
+# The following variable selections have been noted.
+
+input <- c("duration", "credit", "rate", "age",
+               "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+               "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+               "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+               "TNM_ph", "TNM_nri")
+
+numeric <- c("duration", "credit", "rate", "age",
+                 "nocredit", "TNM_check_status", "TNM_history", "TNM_purpose",
+                 "TNM_bonds", "TNM_jobex", "TNM_s_status", "TNM_guarantor",
+                 "TNM_property", "TNM_install", "TNM_house", "TNM_job",
+                 "TNM_ph", "TNM_nri")
+
+categoric <- NULL
+
+target  <- "R01_credibility"
+risk    <- NULL
+ident   <- NULL
+ignore  <- c("residence", "liable")
+weights <- NULL
+
+@
+The \textit{randomForest} package provides the 'randomForest' function. The code snippet building random forest model is given below:
+
+<<message=FALSE,warning=FALSE>>=
+library(randomForest, quietly=TRUE)
+set.seed(crv$seed)
+rf <- randomForest::randomForest(as.factor(R01_credibility) ~ .,
+                                 data=dataset[sample,c(input, target)],
+                                 ntree=500,
+                                 mtry=4,
+                                 importance=TRUE,
+                                 na.action=randomForest::na.roughfix,
+                                 replace=FALSE)
+@
+The textual output of random forest model is:
+<<>>=
+print(rf)
+@
+The \textit{pROC} package implements various AUC functions.
+<<>>=
+# Calculate the Area Under the Curve (AUC).
+
+pROC::roc(rf$y, as.numeric(rf$predicted))
+
+# Calculate the AUC Confidence Interval.
+
+pROC::ci.auc(rf$y, as.numeric(rf$predicted))
+
+@
+From this model we will get the importance of variables:
+<<>>=
+rn <- round(randomForest::importance(rf), 2)
+rn[order(rn[,3], decreasing=TRUE),]
+@
+Random Forest gives less importance to the ignored variables \textit{liable} and \textit{residance} by running in original dataset, which makes the assumption made in preprocessing part strong. Figure [11] shows the relative importance of the variables:
+<<fig.height=6, fig.width=8, fig.cap="Random Forest - Variable Importance">>=
+randomForest::varImpPlot(rf, main="")
+title(main="Variable Importance Random Forest",
+      sub=paste("Rattle", format(Sys.time(), "%Y-%b-%d %H:%M:%S"), Sys.info()["user"]))
+@
+\hspace{0.5cm} Gini importance \cite{[6]} : The variable importance metric refers to the Gini used for asserting model performance which is not closely related to AUC. Every time a split of a node is made on variable m the gini impurity criterion for the two descendent nodes is less than the parent node. Adding up the gini decreases for each individual variable over all trees in the forest gives a fast variable importance that is often very consistent with the permutation importance measure.\\
+Each tree can be displayed using below script ,where 1 is the tree number :
+<<results='hide'>>=
+printRandomForests(rf, 1)
+@
+An ROC (receiver operator characteristic) curve shown in Figure [12] compares the false positive rate to the true positive rate. We can access the trade off the number of observations that are incorrectly classified as positives against the number of observations that are correctly classified as positives.
+<<echo=FALSE>>=
+library(ROCR)
+library(ggplot2, quietly=TRUE)
+pr <- predict(rf, newdata=na.omit(dataset[test, c(input, target)]), type="prob")[,2]
+no.miss   <- na.omit(na.omit(dataset[test, c(input, target)])$R01_credibility)
+miss.list <- attr(no.miss, "na.action")
+attributes(no.miss) <- NULL
+
+if (length(miss.list))
+{
+  pred <- prediction(pr[-miss.list], no.miss)
+} else
+{
+  pred <- prediction(pr, no.miss)
+}
+
+pe <- performance(pred, "tpr", "fpr")
+au <- performance(pred, "auc")@y.values[[1]]
+pd <- data.frame(fpr=unlist(pe@x.values), tpr=unlist(pe@y.values))
+p <- ggplot(pd, aes(x=fpr, y=tpr))
+p <- p + geom_line(colour="red")
+p <- p + xlab("False Positive Rate") + ylab("True Positive Rate")
+p <- p + ggtitle("ROC Curve Random Forest")
+p <- p + theme(plot.title=element_text(size=10))
+p <- p + geom_line(data=data.frame(), aes(x=c(0,1), y=c(0,1)), colour="grey")
+p <- p + annotate("text", x=0.50, y=0.00, hjust=0, vjust=0, size=5,
+                  label=paste("AUC =", round(au, 2)))
+@
+<<fig.height=4, fig.width=8, fig.cap="Random Forest - ROC Curve">>=
+print(p)
+@
+The confusion matrix showing counts and proportions shown below:
+<<>>=
+pr <- predict(rf, newdata=na.omit(dataset[test, c(input, target)]))
+
+table(na.omit(dataset[test, c(input, target)])$R01_credibility, pr,
+      dnn=c("Actual", "Predicted"))
+@
+
+<<echo=FALSE>>=
+pcme <- function(actual, cl)
+{
+  x <- table(actual, cl)
+  tbl <- cbind(round(x/length(actual), 2),
+               Error=round(c(x[1,2]/sum(x[1,]),
+                             x[2,1]/sum(x[2,])), 2))
+  names(attr(tbl, "dimnames")) <- c("Actual", "Predicted")
+  return(tbl)
+};
+@
+<<>>=
+pcme(na.omit(dataset[test, c(input, target)])$R01_credibility, pr)
+
+@
+From the above computations, this model can also be used to analyse the variable importance. Random Forest gives an accuracy of 82\%, but specificity proportion 0.49 only.\\
+The 10 fold cross validation computation as follows:
+<<echo=FALSE,warning=FALSE,message=FALSE>>=
+library(rattle)
+library(randomForest, quietly=TRUE)
+building <- TRUE
+scoring  <- ! building
+dataset <- read.csv("/home/freestyler/BDA_project/Data/outfile.csv", na.strings=c(".", "NA", "", "?"), strip.white=TRUE, encoding="UTF-8")
+n<-nrow(dataset)
+K<-10
+divide<- n %/% K
+set.seed(5)
+#The runif() function can be used to simulate n independent uniform random variables.
+unirand<-runif(n)
+#rank returns the lowest order of position, returns the sample ranks of the values in a vector.
+rang<-rank(unirand)
+bloc<-(rang - 1)%/%divide +1
+bloc<-as.factor(bloc)
+print(summary(bloc))
+@
+Each sub-sample's of sensitivity ,specificity and error rate:
+<<echo=FALSE,message=FALSE,warning=FALSE>>=
+#all.err<- numeric(0)
+all.sense<-numeric(0)
+all.spese<-numeric(0)
+all.acc1<-numeric(0)
+for(k in 1:K){
+rf <- randomForest::randomForest(as.factor(R01_credibility) ~ .,data=dataset[bloc!=k,],
+ntree=500,mtry=4,importance=TRUE, na.action=randomForest::na.roughfix,replace=FALSE)
+#rn <- round(randomForest::importance(rf), 2)
+pred <- predict(rf, newdata=na.omit(dataset[bloc==k,]))
+#confusion matrix for each partition
+mc<-table(na.omit(dataset)$R01_credibility[bloc==k],pred)
+err<-1.0 - (mc[1,1]+mc[2,2])/sum(mc)
+acc1<-1-(err)
+a<-mc[1,1]
+b<-mc[1,1]+mc[1,2]
+sensitivity<-a/b
+c<-mc[2,2]
+d<-mc[2,2]+mc[2,1]
+specificity<-c/d
+#function combines vector, matrix or data frame by rows.
+all.sense<-rbind(all.sense,sensitivity)
+all.spese<-rbind(all.spese,specificity)
+#all.err <- rbind(all.err,err)
+all.acc1<-rbind(all.acc1,acc1)
+}
+print(all.sense)
+print(all.spese)
+#print(all.err)
+print(all.acc1)
+@
+Because we have the same number of examples in each fold, we can compute unweighted mean. This is the average of sub-sample's sensitivity:
+<<echo=FALSE>>=
+sens.cv<-mean(all.sense)
+print(sens.cv)
+@
+This is the average of sub-sample's specificity:
+<<echo=FALSE>>=
+spec.cv<-mean(all.spese)
+print(spec.cv)
+@
+This is the cross validation average accuracy proportion:
+<<echo=FALSE>>=
+#err.cv<-mean(all.err)
+acc1.cv<-mean(all.acc1)
+print(acc1.cv)
+#print(err.cv)
+@
+
+\section{Result and Discussions}\hspace{0.9cm}In this section we are discussing about the results we found from exploratory data analysis onwards to each model's evaluation stage. \par
+\hspace{0.5cm} In data analysis stage we conducted chi squared statistics to categorical data but could not reach any conclusion that impact on the independent variable. In t-statistics p value of two varailbes named "liable", and "residence" were varying drastically hence we assumed that it could not contribute well in output prediction. In addition to that using random forest the obtained variable significance plot also shows those two variables as less significant ones'. The principal componenet analysis was done, and 18 components were giving above 95 percent of the variance. Hence we made PCA Neural network model and analysed its performance as mentioned in section 6.4.1. \par
+\hspace{0.5cm} The ROC graph is a technique for visualizing, organizing and selecting classifiers based on their performance. Comparison of two or more ROC curves is usually based on a comparison of the area measures. The ROC curves of all models is shown in Figure[13] and their area under curve value is showin Table[3]. \par
+\begin{figure}[h]
+\begin{center}
+\includegraphics [scale=0.80]{ROc.png}
+\end{center}
+\caption{ROC Curve comparison of models}
+\end{figure}
+
+\begin{table}[t]
+\caption{Comparison of models}
+\centering
+\begin{tabular}{c|c|c}
+\toprule
+Model No & Model & Area Under Curve \\
+\midrule
+1 & Logistic Regression & 0.8 \\
+2 & Decision Tree & 0.73 \\
+3 & Support Vector Machine & 0.82 \\
+4 & Neural Networks & 0.71 \\
+5 & K Nearest Neighbour & 0.75 \\
+6 & Random Forest & 0.82 \\
+
+\bottomrule
+\end{tabular}
+\label{tab}
+\end{table}
+Table[4] shows each model's sensitivity, specificity and accuracy without 10 fold cross validation and Table[5] with 10 fold cross validation.
+\begin{table}[t]
+\caption{Performance measures}
+\centering
+\begin{tabular}{c|c|c|c|c}
+\toprule
+Model No & Model & Sensitivity & Specificity & Accuracy \\
+\midrule
+1 & Logistic Regression & 0.9 & 0.51 & 0.795\\
+2 & Decision Tree & 0.86 & 0.58 & 0.78\\
+3 & Support Vector Machine & 0.90 & 0.50 & 0.795 \\
+4 & Neural Networks & 0.76 & 0.51 & 0.69\\
+5 & K Nearest Neighbour & 0.82 & 0.673 & 0.78\\
+6 & Random Forest & 0.945 & 0.491 & 0.82\\
+\bottomrule
+\end{tabular}
+\label{tab}
+\end{table}
+
+\begin{table}[t]
+\caption{Performance of measures with 10 FCV}
+\centering
+\begin{tabular}{c|c|c|c|c}
+\toprule
+Model No & Model & Sensitivity & Specificity & Accuracy \\
+\midrule
+1 & Logistic Regression & 0.88 & 0.46 & 0.76\\
+2 & Decision Tree & 0.88 & 0.37 & 0.73\\
+3 & Support Vector Machine & 0.90 & 0.42 & 0.76 \\
+4 & Neural Networks & 0.79 & 0.45 & 0.69\\
+5 & K Nearest Neighbour & 0.96 & 0.49 & 0.82\\
+6 & Random Forest & 0.91 & 0.41 & 0.77\\
+\bottomrule
+\end{tabular}
+\label{tab}
+\end{table}
+
+
+%\subsection{Including tables}
+%Include some summary tables of the data as as shown in table \ref{summary-data}. Make sure you discuss about the table you have included and explain the facts it is revealing. You have to sell your table in a way that the reader will understand that this table was awesome and it reveals a fact the reader would otherwise not recognize.\\
+
+%Notice that we used the function \texttt{xtable()} form the \textbf{R} package \texttt{xtable} \cite{xtab} to generate a pretty table. \texttt{knitr} does this using \LaTeX{} codes generated by \texttt{xtable} and automatically put it in a nicer we and we don't have to worry about its position. Also notice how we write the caption of the table as well as refer the table \ref{summary-data} from the text.
+
+%\subsection{Including figures} Please don't forget to add nice data plots in your documents. Plots are nice to conveying message and much better than tables. Discuss what facts the figure is revealing and refer the figure from the text as figure \ref{fig:data-plot}.
+%
+%<<data-plot, fig.width=5, fig.height=5, fig.align='center', fig.cap="Awesome figure caption" ,out.width='.6\\linewidth',fig.pos="hbtp">>=
+%plot(trees)
+%@
+
+
+\section{Conclusion} \hspace{0.9cm}This report illustrated the study of classification task in german credit dataset. Varoius data mining techniques applied to the dataset, after pre processing techniques. Each model analysed with its performance measures. In section 7 all the models compared with and without 10 fold cross validation as well with ROC curves. Based on the Area Under curve measure from Table[3] we can say that Logistic regression, Support Vector Machine and Random Forest have almost near AUC value and are better than other models.\par
+\hspace{0.5cm}The dataset information, \cite{[2]} mentioned "It is worse to class a customer as good when they are bad (5), than it is to class a customer as bad when they are good (1)". Based on that while analysing the specificity of each model with out 10 FCV, k nearest neighbour giving more value, but among Logistic regression, Support Vector Machine and Random Forest, Logistic Regression has more specificity value with and without 10 FCV.\par
+\hspace{0.5cm}Based on ROC and accuracy Random Forest model performed well. We can ignore the models Neural network and Decision Tree based on their poor performance compared to other models.
+%The conclusion is an elaboration of your abstract. Here you will discuss what you have done and how. The gist of the results need to be mentioned here. It needs to be convincing and the reader will never regret forgetting the date. Please keep it in mind that there may be readers who only read your conclusion. So, make your conclusion complete so that no reader misses anything even if they don't want to read the whole document.\\
+
+%Each paragraph of the conclusion may discuss one result you have found or one concept you are proposing. Discuss your findings and why it is better and how it is compared to any existing methods may exist. \\
+
+%Please don't forget to cite the works of others if you used it in your analysis. The citation is important for two reasons. Fist of all it acknowledges the good works other people have done which encourages them keep continue doing their good work. Second, it protects you from plagiarism which is a very nasty task everyone should avoid.\\
+
+%There should be one paragraph about the future direction of the work you have done. You would like to make it so fascinating that the reader would wish to be involved in this work in future. \\
+
+%Finally this is just a template. Your exact document may have a very different outlook. It demonstrates how you can start to write a document. Our biggest problem is to figure out where to start from. And this documents provides a guide for that. I hope it turns out to be helpful for some of the readers. If you have any comments or concern about this document please let me know so that I can improve this document. 
+
+\newpage
+
+\begin{thebibliography}{9}
+
+\bibitem{ubover}
+    Andrea Dal Pozzolo, Olivier Caelen and Gianluca Bontempi,
+    \emph{unbalanced: Racing for Unbalanced Methods Selection},
+    R package version 2.0,
+    http://cran.r-project.org/web/packages/unbalanced, 
+    2015
+
+\bibitem{dataset}
+  M. Lichman , \emph{{UCI} Machine Learning Repository}.
+  University of California, Irvine, School of Information and Computer Sciences
+  http://archive.ics.uci.edu/ml
+  2013.
+  
+\bibitem{IDRE}
+  Institute for Digital Research and Education
+  \emph{What statistical analysis should I use},
+  UCLA:Statistical Consulting Group.  
+  http://www.ats.ucla.edu/stat/mult\_pkg/whatstat/., 
+  (accessed October 07, 2015)  
+
+\bibitem{BDA}
+  Johannes Ledolter, \emph{DATA MINING AND BUSINESS ANALYTICS WITH R},
+  Department of Management Sciences, Tippie College of Business,
+  University of Iowa.
+  2013.
+
+\bibitem{rattle}
+    Graham J Williams,
+    \emph{Rattle: A Data Mining GUI for R},
+    The R Journal,Vol 1,Pages 45-55
+    http://journal.r-project.org/archive/2009-2/RJournal\_2009-2\_Williams.pdf,
+    Dec, 2009.
+
+\bibitem{rf}
+    Leo Breiman, Adele Cutler and Andy Liaw, Matthew Wiener,
+    \emph{Breiman and Cutler's Random Forests for Classification and Regression},
+    Version 4.6-12, Repository CRAN,
+    http://www.stat.berkeley.edu/~breiman/RandomForests/, 
+    2015.
+
+\bibitem{nnet}
+    Brian Ripley ,William Venables,
+    \emph{Feed-Forward Neural Networks and Multinomial Log-Linear Models},
+    Package nnet,Version 7.3-11, Repository CRAN,
+    https://cran.r-project.org/web/packages/nnet/, 
+    2015.
+
+\bibitem{nnet}
+    Brian Ripley ,William Venables,
+    \emph{Neural Networks with a Principal Component Step },
+    Package caret, Version: 6.0-24,
+    http://www.inside-r.org/packages/cran/caret/docs/pcaNNet.default, 
+    (accessed October 31, 2015).
+
+\end{thebibliography}
+
+\newpage
+\begin{flushleft}
+{\Large\textbf{Appendix}}\\\\
+\end{flushleft}
+
+\textbf{Attribute Information:}\\
+Attribute 1: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ check\_ status$}\\
+Recoded to numeric values [1,2,3,4] respectively.}\\
+Status of existing checking account\\
+A11 : ... $\< $0 DM\\
+A12 : 0 $\leq$ ... $\<$ 200 DM\\
+A13 : ... $\geq$ 200 DM / salary assignments for at least 1 year\\
+A14 : no checking account\\
+\\
+Attribute 2: (numerical)\\
+Duration in month\\
+\\
+Attribute 3: (qualitative) \\
+\textbf{Renamed as \textit{$TNM\_ history$}}\\
+\textbf{Recoded to numeric values [1,2,3,4,5] respectively.}\\
+Credit history\\
+A30 : no credits taken/ all credits paid back duly\\
+A31 : all credits at this bank paid back duly\\
+A32 : existing credits paid back duly till now\\
+A33 : delay in paying off in the past\\
+A34 : critical account/ other credits existing (not at this bank)\\
+\\
+Attribute 4: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ purpose$}}\\
+\textbf{Recoded to numeric values [1 to 11] respectively.}\\
+Purpose\\
+A40 : car (new)\\
+A41 : car (used)\\
+A42 : furniture/equipment\\
+A43 : radio/television\\
+A44 : domestic appliances\\
+A45 : repairs\\
+A46 : education\\
+A47 : (vacation - does not exist\?)\\
+A48 : retraining\\
+A49 : business\\
+A410 : others\\
+\\
+Attribute 5: (numerical)\\
+Credit amount\\
+\\
+Attibute 6: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ bonds$}}\\
+\textbf{Recoded to numeric values [1 to 5] respectively.}\\
+Savings account/bonds\\
+A61 : ... $\<$ 100 DM
+A62 : 100 $\leq$ ... $\<$ 500 DM\\
+A63 : 500 $\leq$ ... $\<$ 1000 DM\\
+A64 : .. $\geq$ 1000 DM\\
+A65 : unknown/ no savings account\\
+\\
+Attribute 7: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ jobex$}}\\
+\textbf{Recoded to numeric values [1 to 5] respectively.}\\
+Present employment since\\
+A71 : unemployed\\
+A72 : ... $\<$ 1 year\\
+A73 : 1 $\leq$ ... $\<$ 4 years\\
+A74 : 4 $\leq$ ... $\<$ 7 years\\
+A75 : .. $\geq$ 7 years\\
+\\
+Attribute 8: (numerical)\\
+Installment rate in percentage of disposable income\\
+\\
+Attribute 9: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ s\_ status$}}\\
+\textbf{Recoded to numeric values [1 to 5] respectively.}\\
+Personal status and sex\\
+A91 : male : divorced/separated\\
+A92 : female : divorced/separated/married\\
+A93 : male : single\\
+A94 : male : married/widowed\\
+A95 : female : single\\
+\\
+Attribute 10: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ guarantor$}}\\
+\textbf{Recoded to numeric values [1 to 3] respectively.}\\
+Other debtors / guarantors\\
+A101 : none\\
+A102 : co-applicant\\
+A103 : guarantor\\
+\\
+Attribute 11: (numerical)\\
+Present residence since\\
+\\
+Attribute 12: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ property$}}\\
+\textbf{Recoded to numeric values [1 to 4] respectively.}\\
+Property\\
+A121 : real estate\\
+A122 : if not A121 : building society savings agreement/ life insurance\\
+A123 : if not A121/A122 : car or other, not in attribute 6\\
+A124 : unknown / no property\\
+\\
+Attribute 13: (numerical)\\
+Age in years\\
+\\
+Attribute 14: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ install$}}\\
+\textbf{Recoded to numeric values [1 to 3] respectively.}\\
+Other installment plans\\
+A141 : bank\\
+A142 : stores\\
+A143 : none\\
+\\
+Attribute 15: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ house$}}\\
+\textbf{Recoded to numeric values [1 to 3] respectively.}\\
+Housing\\
+A151 : rent\\
+A152 : own\\
+A153 : for free\\
+\\
+Attribute 16: (numerical)\\
+Number of existing credits at this bank\\
+\\
+Attribute 17: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ job$}}\\
+\textbf{Recoded to numeric values [1 to 4] respectively.}\\
+Job\\
+A171 : unemployed/ unskilled - non-resident\\
+A172 : unskilled - resident\\
+A173 : skilled employee / official\\
+A174 : management/ self-employed/\\
+highly qualified employee/ officer\\
+\\
+Attribute 18: (numerical)\\
+Number of people being liable to provide maintenance for\\
+\\
+Attribute 19: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ ph$}}\\
+\textbf{Recoded to numeric values [1 - 2] respectively.}\\
+Telephone\\
+A191 : none\\
+A192 : yes, registered under the customers name\\
+\\
+Attribute 20: (qualitative)\\
+\textbf{Renamed as \textit{$TNM\_ nri$}}\\
+\textbf{Recoded to numeric values [1 -2] respectively.}\\
+foreign worker\\
+A201 : yes\\
+A202 : no \\
+\\
+Attribute 21: (Target variable)\\
+\textbf{Renamed as \textit{$R01\_ credibility$}}\\
+\textbf{Recoded to numeric values [0-1] respectively.}\\
+Labels\\
+0 : Good\\
+1 : Bad \\
+
+\end{document}

@@ -1,0 +1,731 @@
+/*
+ Theme Name:   Twenty Fourteen Child
+ Theme URI:        http://example.com/twenty-fourteen-child/
+ Description:       Twenty Fourteen Child Theme
+ Author:                John Doe
+ Author URI:        http://example.com
+ Template:           twentyfourteen
+ Version:               1.0.0
+ Tags:                      light, dark, two-columns, right-sidebar, responsive-layout, accessibility-ready
+ Text Domain:  twenty-fourteen-child
+*/
+
+
+@import url("../twentyfourteen/style.css");
+
+
+/* =Theme customization starts here
+-------------------------------------------------------------- */
+
+/*Include Lora font*/
+/*<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>*/
+
+@font-face {
+	font-family: HelveticaNeue;  
+	src: url(http://rstatistics.net/public_html/wp-content/themes/twentyfourteen-child/fonts/helveticaneue-webfont.ttf);  
+	font-weight: normal;  
+}
+
+body {
+  font-family: HelveticaNeue, Arial, serif;
+}
+
+/*Adjust page width*/
+.site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+  /*margin: 0 auto;*/
+  /* max-width: 774px; */
+  max-width: 774px;
+}
+
+/*Adjust margin of .entry-content*/
+.entry-content {
+margin: 0 10px;
+}
+
+/*Adjust right margin of .entry-content*/
+.site-content .entry-content {
+    margin-right: 0px;
+}
+
+.content-area, .content-sidebar {
+padding-top: 40px;
+}
+
+/*Title of the page*/
+.entry-title {
+font-size: 26px;
+font-weight: 500;
+text-align: center; /*center the title*/
+}
+
+/* Change this section along with css of .site-description*/
+/*Changing the font size of body*/
+body, button, input, select, textarea {
+color: #2b2b2b;
+/*color: #000;*/
+/*font-family: 'Lora', serif, Arial, sans-serif;*/
+/*font-size: 1em;*/
+/*font-size: 14px;*/
+font-size: 17px;
+/*font-weight: 600;*/
+font-weight: 400;
+/*line-height: 1.429;*/
+/*line-height: 1.5;*/
+line-height: 1.75em;
+text-align: left;
+}
+
+/*changing the font color in site description*/
+.site-description {
+display: none; /*Turned Off*/
+color: rgb(255, 153, 0);
+font-size: 0.875em;
+font-weight: 600;
+line-height: 1.6;
+font-family: Arial, sans-serif;
+text-align: justify;
+}
+
+
+/*Change font-size, color and weight of header title*/
+.entry-title {
+font-size: 26px;
+font-weight: 700;
+color: #FF6600;
+}
+
+/*Update the color of selected menu item*/
+.site-navigation .current_page_item > a, .site-navigation .current_page_ancestor > a, .site-navigation .current-menu-item > a, .site-navigation .current-menu-ancestor > a {
+color: #FF9901;
+font-weight: 900;
+}
+
+/*Update the color of Main menu upon hovering*/
+.secondary-navigation li:hover > a, .secondary-navigation li.focus > a {
+/*background-color: #FF9901;*/
+background-color: #A5A5A5;
+color: #000000;
+}
+
+/*Left align the secondary main navigation menu on left*/
+.secondary-navigation ul li {
+ text-align:left;
+}
+
+/*Prevent main menu from scrolling along with page..*/
+.secondary-navigation, .secondary-navigation ul ul {
+width: 222px;
+/*position: fixed;*/
+}
+
+/*Remove underlining external / internal links*/
+.entry-content a, .entry-summary a, .page-content a, .comment-content a {
+text-decoration: blink;
+color: #428bca;
+}
+
+/* Modify code blocks */
+code {
+margin: 5px 0;
+padding: 10px;
+text-align: left;
+display: block;
+overflow: auto;
+/*font: 500 1em/1.5em 'Lucida Console', 'courier new', monospace;*/
+font: 400 0.9em/1.0em 'consolas', 'Source Code Pro', 'Lucida Console', 'courier new', monospace;
+white-space: pre-wrap;
+background: #FAFAFA;
+border: 1px solid #DDD;
+border-left: 5px solid #F07707;
+margin-bottom: 12px;
+word-wrap: break-word;
+word-break: break-all;
+line-height: 120%;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 4px;
+/*-moz-box-shadow: 0px 0px 3px 0px #999;*/
+/*-webkit-box-shadow: 0px 0px 3px 0px #999;*/
+}
+
+/*Change background color in code box to black*/
+code {
+  /* background: #373535;*/   /*Cleaner black*/
+  /* background: #454141; */  /*Slightly Orangish black*/
+  /* background: #738A8D; */  /*Grey*/
+  /* background: #738A8D; */
+  background: #eee;
+  border-left: 3px solid #F07707;
+  color: #000;
+}
+
+
+
+
+/* Adjust bootom margin of paragraph*/
+p {
+  /*margin-bottom: 18px;*/
+  margin-bottom: 8px;
+  text-align:justify;
+}
+
+/*Change size and color of search bar*/
+.search-toggle {
+width: 20px;
+background-color: #0A0A0A;
+}
+
+/*Change color of highlighted text*/
+::selection {
+	/*background: #FC0;
+	color: #070707;*/
+	/*background-color: #ff6200;*/
+        background-color: #F79050;
+	color: #fff;
+	text-shadow: none;
+}
+
+/*Change color of highlighted text*/
+::-moz-selection {
+	background: #FC0;
+	color: #070707;
+	text-shadow: none;
+}
+
+/*Change width of left hand side main menu*/
+.secondary-navigation a {
+padding: 1px 20px;
+}
+
+/*Change background color of table*/
+.entry-content table {
+background-color: #F8F8F8;
+border: 1px solid #EAEAEA;
+line-height: 1.5;
+}
+
+/* Center the text within the header of table */
+th {
+    text-align: center;
+}
+
+/* Hide snippet box */
+#snippet-box {
+display: none;
+}
+
+
+/* change search box color*/
+.search-box {
+background-color: #F89312;
+padding: 12px;
+}
+
+.search-toggle:hover, .search-toggle.active {
+background-color: #F89312;
+}
+
+/* Customize Table of Contents */
+#toc_container {
+background: #f1f1f1;
+border: 1px solid #dadada;
+-webkit-border-radius: 3px;
+float: right;
+margin-left: 16px;
+padding: 4px 8px;
+margin-bottom: 12px;
+font-size: 85%;
+max-width: 80%;
+}
+
+/*Table Of Contents*/
+div#toc_container {
+background: #FDFDFD;
+border: 1px solid #dadada;
+-webkit-border-radius: 3px;
+float: right;
+margin-left: 16px;
+padding: 4px 8px;
+margin-bottom: 12px;
+font-size: 85%;
+max-width: 40%;
+display: block;
+}
+
+/* Color of text in Table of contents - links*/
+.toc_list a {
+/*color: #21759b;*/
+color: #428bca;
+}
+
+#toc-widget-2 {
+background: #FDFDFD;
+border: 1px solid #dadada;
+-webkit-border-radius: 3px;
+float: right;
+margin-left: 16px;
+padding: 4px 8px;
+margin-bottom: 12px;
+font-size: 95%;
+max-width: 100%;
+display: block;
+line-height: 1.85;
+}
+
+#toc-widget-2 a{
+/*color: #21759b;*/
+color: #428bca;
+}
+
+/* Change font size of 'pre' */
+pre {
+  font-size: 12px;
+  #font: 400 0.8em/1.5em 'Lucida Console', 'courier new', monospace;
+  line-height: 150%;
+}
+
+/* Change font Size of Header Pre that appears right after div.entry-content*/
+div.entry-content > div:first-child > div:first-child > pre:first-child {
+font-size: 16px;
+}
+
+div > pre{
+font-size: 13px;
+}
+
+/*Font of headings*/
+h2 {font-size: 1.571em}	/* 22px */
+h3 {font-size: 1.429em}	/* 20px */
+h4 {font-size: 1.286em}	/* 18px */
+h5 {font-size: 1.143em}	/* 16px */
+h6 {font-size: 1em}		/* 14px */
+
+
+
+h2, h3, h4, h5, h6 {
+	font-weight: 500;
+	line-height: 1.1;
+	/*margin-bottom: .8em;*/
+	margin: 32px 0 10px;
+	font-family: 'Bitter', HelveticaNeue, 'Lato', serif;
+	text-align: left;
+}
+
+h1 {
+  font-size: 1.8em;
+  line-height: 1.3;
+  margin-bottom: 0.25em;
+  padding: 0;
+  font-family: 'Bitter', HelveticaNeue, 'Lato', serif;
+}
+
+
+/* Adjust The margins of each page's entry title*/
+.entry-title {
+	margin: 32px 0 10px;
+}
+
+/* ADD MARGIN AROUND IMAGES */
+img {
+border: solid black 1px;
+}
+
+/* ADJUST PADDING FOR CONTENT AREA ON FRONT PAGE: Remove the excess space on top of "Welcom to RStatistics.Net"*/
+.content-area, .content-sidebar {
+padding-top: 0px;
+}
+
+/*Special heading "sp-head", applies t heading in video tutorials page */
+h1.sp-head {
+font-size: 32px !important;
+color: #464646;
+font-weight: bold !important;
+text-transform: uppercase;
+font-family: 'Oswald', Arial, Helvetica;
+text-align: center;
+/*margin: 8px 0 8px;*/
+}
+
+/*Decorate links */ 
+li a:hover {
+    text-decoration: underline;
+    color: #FF6600;
+   /* -moz-text-decoration-color: #FF6600; */
+   /*    text-decoration-color: #FF6600;   */
+    border-bottom-color: #FF6600;
+}
+
+
+
+/*Youtube subscribe*/
+#yt-subscribe{
+float:right;
+}
+
+/*Youtube video border*/
+#yt-video-border {
+  background-color: #111111;
+  /* background-image: -webkit-gradient(linear, center top, center bottom, from(#1f1f1f), to(#111));*/
+  /* background-image: -webkit-linear-gradient(top, #1f1f1f, #111);*/
+  /* background-image: -moz-linear-gradient(top, #1f1f1f, #111);*/
+  /* background-image: -o-linear-gradient(top, #1f1f1f, #111);*/
+  /* background-image: -ms-linear-gradient(top, #1f1f1f, #111);*/
+  background-image: linear-gradient(to bottom, #1f1f1f,#111111);
+  padding: 10px 10px 25px 10px !important;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.3);
+  /* border-bottom: 3px solid rgba(0,0,0,0.3);*/
+  /* -webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.1); */
+  /* -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.1); */
+  box-shadow: 0 1px 5px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/*# Edit page headlines*/
+/*
+div .heading-pre {
+  background-color: beige;
+  padding: 20px;
+}*/
+
+/*# Style Optin Form on Front Page*/
+.content-sidebar {
+  padding-top: 50px;
+  border-top: 0px;
+}
+
+/*Change color of side bar widget title*/
+.content-sidebar.widget-title {
+  font-color: #FF6200;
+}
+
+/*# Style Optin Form on Front Page*/
+.content-sidebar .widget .widget-title {
+  border-top: 0px solid #000;
+  color: #FF6200;
+  font-size: 13px;
+  font-weight: 900;
+  margin: 0 0 3px;
+  padding-top: 1px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Change Back ground color */
+div#content-sidebar {
+  /*border: 10px;*/
+  /*background-color: rgb(252, 242, 220);*/
+  /*background-color: rgb(247, 226, 158);*/
+  /*background-color: antiquewhite;*/
+    background-color: rgb(249, 165, 55);
+}
+
+/* Style Optin form Title */
+.content-sidebar .widget .widget-title {
+border-top: 0px solid #000;
+color: #FF5700;
+font-size: 16px;
+font-weight: 500;
+margin: 0 0 3px;
+padding-top: 1px;
+text-transform: uppercase;
+text-align: center;
+}
+
+/* Style Youtube Text widget in right sidebar*/
+aside#text-2 {
+  text-align: center;
+  border: groove;
+  padding: 5px;
+  border-radius: 5px;
+  border-color: rgb(232, 178, 5);
+  /*background-color: rgba(232, 178,5,0.25);*/
+  background-color: rgba(255, 255, 255, 1);
+  width: 90%;
+  border-width: thin;
+  margin-bottom: 24px;
+}
+
+/*Change font size of table of contents in right side bar*/
+#toc-widget-2 {
+  font-size: 80%;
+}
+
+/* Style the first main pre header in all pages*/
+div > pre:first-of-type {  
+  /*background-color: antiquewhite;*/
+  font-size: 1em;
+  padding: 20px;
+  font-weight: 500;
+  font-style: italic;
+  font-family: lato, bitter, inherit;
+  /*background-color: rgb(247, 226, 158);*/
+  background-color: rgb(249, 247, 243);
+  line-height: 200%;
+}
+
+/* Style references */
+div .references {
+  font-size: 0.8em;
+  font-style: italic;
+  line-height: 80%;
+}
+
+/* Sidebar optin mailmunch*/
+aside#mailmunch_widget-2 {
+ border: 5px;
+ border-style: solid;
+ border-bottom-width: thick;
+ border-radius: 10px;
+ border-color: rgb(249, 165, 55);
+ padding: 10px;
+ background-color: rgb(249, 248, 243);
+ width: 90%;
+}
+
+
+/*Re size header font size*/
+h2 {font-size: 1.277em; color:#ff6600;}	
+h3 {font-size: 1.157em; color:#ff6600;}	
+h4 {font-size: 1.041em; color:#ff6600;}	
+h5 {font-size: 0.94em; color:#ff6600;}	
+h6 {font-size: 0.84em; color:#ff6600;}	
+
+/*Style 'Recommended for you'*/
+/*Adjust height and width of the recommendations scroll up bar*/
+.at4-whatsnext {
+  width: 450px;
+  height: 124px;
+}
+
+/*Adjust pading width of right sidebar*/
+.content-sidebar {
+  padding-top: 20px;
+  border-top: 0px;
+  padding-bottom: 5px;
+  padding-left: 25px;
+  padding-right: 10px;
+}
+
+/*Adjust page width*/
+.site-header {
+ max-width: 100%;
+}
+
+div#page {
+  max-width: 95%;
+}
+
+a#at-whatsnext-link {
+color: #F60;
+font-family: bitter, helveticaneue, lato;
+font-size: 1.2em;
+line-height: 1.2em;
+}
+
+/*Recommended for you text*/
+.at-h6 {
+font-size: 14px;
+height: 24px;
+}
+
+
+/* Hide rstatistics.net in recommended for you scroll up bar*/
+small#at-whatsnext-dom {
+  viisibility: hidden;
+}
+
+/*Hide logo*/
+a.at4-logo {
+  visibility: hidden;
+}
+
+/*Style the image in recomended for you by addthis*/
+img#at-whatsnext-img {
+  width: 120px;
+  height: 120px;
+  padding: 5px;
+  margin: 2px;
+  border-color: black;
+  /*background-color: tomato;*/
+}
+
+
+/*Style Easy spoiler box heading*/
+th.easySpoilerTitleA, th.easySpoilerTitleB, th.easySpoilerGroup {
+  font-size: 100%;
+  text-transform: initial;
+}
+
+/*Hide the select button in easy spoiler*/
+a.easySpoilerButtonOther {
+  visibility: hidden;
+}
+
+/*Style easy spoiler*/
+.easySpoilerWrapper {
+  -moz-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #aaa;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #e4e4e4;
+  background: white;
+  padding: 0;
+  margin: 0;
+  xborder: 0 solid;
+}
+
+/*Remove he extra space in margin below the code  in easy spoiler*/
+div.easySpoilerWrapper code {
+  margin-bottom: 0px;
+}
+
+/*Hide mailmunch logo*/
+a.mailmunch-branding {
+  visibility: hidden;
+}
+
+/*Font of 'recommended for you'*/
+.at-h3.at-recommended-label{
+  font-family: bitter, HelveticaNeue, Arial, serif;
+  color: #ff6200;
+}
+
+
+/* Addthis Original share buttons at bottom of page*/
+.at-below-post-page.addthis-toolbox {
+  margin: 35px;
+}
+
+a.addthis_button_linkedin_counter.at300b {
+ margin: 5px;
+}
+
+a.addthis_button_tweet.at300b {
+ margin: 3px;
+}
+
+/*Style images - raised effect*/
+.entry-content img {
+  -webkit-box-shadow: 0px 0px 15px 3px #999;
+  -moz-box-shadow: 0px 0px 15px 3px #999;
+}
+
+/*Adjust width of banner*/
+#site-header img {
+  width: 99.8%
+}
+
+/*Hide Amazon logo*/
+.ft_cnt img {
+  visibility: hidden;
+}
+
+/*Hide Amazon privacy link*/
+.ft_cnt a {
+  visibility: hidden;
+}
+
+/*background color for the sub menu*/
+ul.sub-menu > li{
+  background-color: #bdbdbd;
+  color: black;
+}
+
+/*font color of sub-menu items*/
+ul.sub-menu > li > a{
+  color: black;
+}
+
+ul.sub-menu > li::selection{
+  background-color: #a6a6a6;
+}  
+
+/*Align recommended sidebar header*/
+.addthis-smartlayers .at4-recommended.at-inline .at-h3.at-recommended-label, .at-h3.at-recommended-label.at-vertical {
+  text-align: center;
+}
+
+/*Background color and padding for text widget*/
+.textwidget {
+  background-color: white;
+  padding: 15px;
+}
+
+/*Text widgets width*/
+aside#text-3, aside#text-4, aside#text-5 {
+  width: 93%;
+  border-radius: 5px;
+}
+
+/*Make rstatistics.net in addthis side bar recommendations invisible*/
+div.at4-recommended-item-caption > small {
+  visibility: hidden;
+}
+
+/*CSS for Exercise Completed button*/
+.myButton {
+	-moz-box-shadow:inset 0px 1px 3px 0px #91b8b3;
+	-webkit-box-shadow:inset 0px 1px 3px 0px #91b8b3;
+	box-shadow:inset 0px 1px 3px 0px #91b8b3;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #768d87), color-stop(1, #6c7c7c));
+	background:-moz-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+	background:-webkit-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+	background:-o-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+	background:-ms-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+	background:linear-gradient(to bottom, #768d87 5%, #6c7c7c 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#768d87', endColorstr='#6c7c7c',GradientType=0);
+	background-color:#768d87;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:11px 76px;
+	text-decoration:none;
+	text-shadow:0px -1px 0px #2b665e;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #6c7c7c), color-stop(1, #768d87));
+	background:-moz-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+	background:-webkit-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+	background:-o-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+	background:-ms-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+	background:linear-gradient(to bottom, #6c7c7c 5%, #768d87 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#6c7c7c', endColorstr='#768d87',GradientType=0);
+	background-color:#6c7c7c;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+a.myButton  {
+  color: white;
+}
+
+/*Change color of main side menu - 9 Aug 2015*/
+#secondary {
+  background-color: rgba(77, 77, 77, 0.67);
+}
+
+/*Change color of text inside main side menu - 9 Aug 2015*/
+.secondary-navigation a{
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/*Change color of RSTATISTICS.NET title just above main side menu - 9 Aug 2015*/
+.site-title a{
+  color: #FFFFFF;
+}
+
+
+
+

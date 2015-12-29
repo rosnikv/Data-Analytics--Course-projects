@@ -1,0 +1,206 @@
+> library("MASS")
+> data<-read.csv("/root/BDA_project/german.csv")
+> tbl=table(data$purpose,data$credibility)
+> tbl
+      
+         1   2
+  A40  145  89
+  A41   86  17
+  A410   7   5
+  A42  123  58
+  A43  218  62
+  A44    8   4
+  A45   14   8
+  A46   28  22
+  A48    8   1
+  A49   63  34
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 33.356, df = 9, p-value = 0.0001157
+
+Warning message:
+In chisq.test(tbl) : Chi-squared approximation may be incorrect
+> tbl=table(data$status,data$credibility)
+> tbl
+     
+        1   2
+  A11 139 135
+  A12 164 105
+  A13  49  14
+  A14 348  46
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 123.72, df = 3, p-value < 2.2e-16
+
+> tbl=table(data$history,data$credibility)
+> tbl
+     
+        1   2
+  A30  15  25
+  A31  21  28
+  A32 361 169
+  A33  60  28
+  A34 243  50
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 61.691, df = 4, p-value = 1.279e-12
+
+> tbl=table(data$bonds,data$credibility)
+> tbl
+     
+        1   2
+  A61 386 217
+  A62  69  34
+  A63  52  11
+  A64  42   6
+  A65 151  32
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 36.099, df = 4, p-value = 2.761e-07
+
+> tbl=table(data$jobex,data$credibility)
+> tbl
+     
+        1   2
+  A71  39  23
+  A72 102  70
+  A73 235 104
+  A74 135  39
+  A75 189  64
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 18.368, df = 4, p-value = 0.001045
+
+> tbl=table(data$sex,data$credibility)
+> tbl
+     
+        1   2
+  A91  30  20
+  A92 201 109
+  A93 402 146
+  A94  67  25
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 9.6052, df = 3, p-value = 0.02224
+
+> tbl=table(data$guarantors,data$credibility)
+Error in table(data$guarantors, data$credibility) : 
+  all arguments must have the same length
+> tbl=table(data$guarantor,data$credibility)
+> tbl
+      
+         1   2
+  A101 635 272
+  A102  23  18
+  A103  42  10
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 6.6454, df = 2, p-value = 0.03606
+
+> tbl=table(data$property,data$credibility)
+> tbl
+      
+         1   2
+  A121 222  60
+  A122 161  71
+  A123 230 102
+  A124  87  67
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 23.72, df = 3, p-value = 2.858e-05
+
+> tbl=table(data$install,data$credibility)
+> tbl
+      
+         1   2
+  A141  82  57
+  A142  28  19
+  A143 590 224
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 12.839, df = 2, p-value = 0.001629
+
+> tbl=table(data$house,data$credibility)
+> tbl
+      
+         1   2
+  A151 109  70
+  A152 527 186
+  A153  64  44
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 18.2, df = 2, p-value = 0.0001117
+
+> tbl=table(data$job,data$credibility)
+> tbl
+      
+         1   2
+  A171  15   7
+  A172 144  56
+  A173 444 186
+  A174  97  51
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 1.8852, df = 3, p-value = 0.5966
+
+> tbl=table(data$ph,data$credibility)
+> tbl
+      
+         1   2
+  A191 409 187
+  A192 291 113
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test with Yates' continuity correction
+
+data:  tbl
+X-squared = 1.1726, df = 1, p-value = 0.2789
+
+> tbl=table(data$nri,data$credibility)
+> tbl
+      
+         1   2
+  A201 667 296
+  A202  33   4
+> chisq.test(tbl)
+
+	Pearson's Chi-squared test with Yates' continuity correction
+
+data:  tbl
+X-squared = 5.8216, df = 1, p-value = 0.01583
+
+> 
+
