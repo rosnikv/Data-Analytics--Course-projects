@@ -1,0 +1,12 @@
+
+German Credit Scoring using R
+
+A credit scoring system should be able to classify customers as good credit those who are expected to repay on time and as 
+bad credit those who are expected to fail. This study illustrates the use of data mining techniques to construct credit scoring 
+models. Also, it illustrates the comparison of credit scoring models to give a superior final model.
+
+
+
+All Files are Experiments. The Final work  you can find out in Report Folder --> 04-dynamic-doc.pdf
+The Latex code for making the Report with Rsweave is included in Report Folder
+Data Folder has all intermediate edited Data files also, Original data file is geramncredit.csv
